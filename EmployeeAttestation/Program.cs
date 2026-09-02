@@ -6,7 +6,10 @@ namespace EmployeeAttestation
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Extra.AppConfigManager configManager = new();
+            Data.DatabaseManager databaseManager = new(configManager);
+            databaseManager.Initialize();
+            Application.Run(new Forms.MainForm(databaseManager));
         }
     }
 }
