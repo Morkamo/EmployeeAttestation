@@ -5,68 +5,103 @@ namespace EmployeeAttestation.Controls.Pages;
 partial class CommissionsControl
 {
     private System.ComponentModel.IContainer components = null!;
-    private TableLayoutPanel pageLayout = null!; private Label titleLabel = null!; private Label subtitleLabel = null!;
-    private TableLayoutPanel workspaceLayout = null!; private TableLayoutPanel commissionsPanel = null!; private TableLayoutPanel membersPanel = null!;
-    private Label commissionsTitleLabel = null!; private Label membersTitleLabel = null!; private FlowLayoutPanel commissionsButtonsPanel = null!;
-    private FlowLayoutPanel membersButtonsPanel = null!; private Button addButton = null!; private Button editButton = null!;
-    private Button editMembersButton = null!; private DataGridView commissionsGrid = null!; private DataGridView membersGrid = null!;
+    private TableLayoutPanel pageLayout = null!;
+    private Label titleLabel = null!;
+    private Label subtitleLabel = null!;
+    private TableLayoutPanel workspaceLayout = null!;
+    private TableLayoutPanel commissionsPanel = null!;
+    private Label commissionsTitleLabel = null!;
+    private TableLayoutPanel filterLayout = null!;
+    private TextBox searchTextBox = null!;
+    private ComboBox statusFilterComboBox = null!;
+    private FlowLayoutPanel commissionsButtonsPanel = null!;
+    private Button addButton = null!;
+    private Button editButton = null!;
+    private Button archiveButton = null!;
+    private DataGridView commissionsGrid = null!;
+    private TableLayoutPanel membersPanel = null!;
+    private Label membersTitleLabel = null!;
+    private FlowLayoutPanel membersButtonsPanel = null!;
+    private Button editMembersButton = null!;
+    private Button manageMembersButton = null!;
+    private DataGridView membersGrid = null!;
 
     protected override void Dispose(bool disposing) { if (disposing) components?.Dispose(); base.Dispose(disposing); }
 
     private void InitializeComponent()
     {
         pageLayout = new TableLayoutPanel(); titleLabel = new Label(); subtitleLabel = new Label(); workspaceLayout = new TableLayoutPanel();
-        commissionsPanel = new TableLayoutPanel(); membersPanel = new TableLayoutPanel(); commissionsTitleLabel = new Label(); membersTitleLabel = new Label();
-        commissionsButtonsPanel = new FlowLayoutPanel(); membersButtonsPanel = new FlowLayoutPanel(); addButton = new Button(); editButton = new Button();
-        editMembersButton = new Button(); commissionsGrid = new DataGridView(); membersGrid = new DataGridView(); pageLayout.SuspendLayout();
-        workspaceLayout.SuspendLayout(); commissionsPanel.SuspendLayout(); membersPanel.SuspendLayout(); commissionsButtonsPanel.SuspendLayout();
-        membersButtonsPanel.SuspendLayout(); ((System.ComponentModel.ISupportInitialize)commissionsGrid).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)membersGrid).BeginInit(); SuspendLayout();
-        pageLayout.ColumnCount = 1; pageLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); pageLayout.Controls.Add(titleLabel, 0, 0);
-        pageLayout.Controls.Add(subtitleLabel, 0, 1); pageLayout.Controls.Add(workspaceLayout, 0, 2); pageLayout.Dock = DockStyle.Fill;
-        pageLayout.Padding = new Padding(36); pageLayout.RowCount = 3; pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); pageLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        commissionsPanel = new TableLayoutPanel(); commissionsTitleLabel = new Label(); filterLayout = new TableLayoutPanel();
+        searchTextBox = new TextBox(); statusFilterComboBox = new ComboBox(); commissionsButtonsPanel = new FlowLayoutPanel();
+        addButton = new Button(); editButton = new Button(); archiveButton = new Button(); commissionsGrid = new DataGridView();
+        membersPanel = new TableLayoutPanel(); membersTitleLabel = new Label(); membersButtonsPanel = new FlowLayoutPanel();
+        editMembersButton = new Button(); manageMembersButton = new Button(); membersGrid = new DataGridView();
+        pageLayout.SuspendLayout(); workspaceLayout.SuspendLayout(); commissionsPanel.SuspendLayout(); filterLayout.SuspendLayout();
+        commissionsButtonsPanel.SuspendLayout(); ((System.ComponentModel.ISupportInitialize)commissionsGrid).BeginInit(); membersPanel.SuspendLayout();
+        membersButtonsPanel.SuspendLayout(); ((System.ComponentModel.ISupportInitialize)membersGrid).BeginInit(); SuspendLayout();
+        pageLayout.ColumnCount = 1; pageLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        pageLayout.Controls.Add(titleLabel, 0, 0); pageLayout.Controls.Add(subtitleLabel, 0, 1); pageLayout.Controls.Add(workspaceLayout, 0, 2);
+        pageLayout.Dock = DockStyle.Fill; pageLayout.Padding = new Padding(36); pageLayout.RowCount = 3;
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         titleLabel.AutoSize = true; titleLabel.Font = new Font("Segoe UI Semibold", 26F, FontStyle.Bold); titleLabel.ForeColor = AppColors.TextPrimary;
         titleLabel.Margin = new Padding(0, 0, 0, 6); titleLabel.Text = "Комиссии";
         subtitleLabel.AutoSize = true; subtitleLabel.Font = new Font("Segoe UI", 11F); subtitleLabel.ForeColor = AppColors.TextSecondary;
         subtitleLabel.Margin = new Padding(2, 0, 0, 30); subtitleLabel.Text = "Управление комиссиями и их составом.";
-        workspaceLayout.ColumnCount = 2; workspaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        workspaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F)); workspaceLayout.Controls.Add(commissionsPanel, 0, 0);
+        workspaceLayout.ColumnCount = 2; workspaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52F));
+        workspaceLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F)); workspaceLayout.Controls.Add(commissionsPanel, 0, 0);
         workspaceLayout.Controls.Add(membersPanel, 1, 0); workspaceLayout.Dock = DockStyle.Fill; workspaceLayout.RowCount = 1;
         workspaceLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        ConfigureSection(commissionsPanel, commissionsTitleLabel, commissionsButtonsPanel, commissionsGrid, new Padding(0, 0, 8, 0));
-        ConfigureSection(membersPanel, membersTitleLabel, membersButtonsPanel, membersGrid, new Padding(8, 0, 0, 0));
-        commissionsTitleLabel.Text = "Комиссии"; membersTitleLabel.Text = "Состав комиссии";
-        commissionsButtonsPanel.Controls.Add(addButton); commissionsButtonsPanel.Controls.Add(editButton);
-        membersButtonsPanel.Controls.Add(editMembersButton); ConfigureSectionButton(addButton, "Добавить", 120);
-        ConfigureSectionButton(editButton, "Изменить", 120); ConfigureSectionButton(editMembersButton, "Изменить состав", 170);
-        commissionsGrid.AllowUserToAddRows = false; commissionsGrid.AllowUserToDeleteRows = false; commissionsGrid.AllowUserToResizeRows = false;
-        commissionsGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        commissionsGrid.Columns.AddRange(new DataGridViewTextBoxColumn { HeaderText = "Название комиссии", Name = "nameColumn" },
-            new DataGridViewTextBoxColumn { HeaderText = "Описание", Name = "descriptionColumn" });
-        ConfigureGrid(commissionsGrid);
-        membersGrid.AllowUserToAddRows = false; membersGrid.AllowUserToDeleteRows = false; membersGrid.AllowUserToResizeRows = false;
-        membersGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        membersGrid.Columns.AddRange(new DataGridViewTextBoxColumn { HeaderText = "ФИО", Name = "fullNameColumn", FillWeight = 140 },
-            new DataGridViewTextBoxColumn { HeaderText = "Роль", Name = "roleColumn", FillWeight = 75 });
-        ConfigureGrid(membersGrid);
+        ConfigureSection(commissionsPanel, commissionsTitleLabel, new Padding(0, 0, 8, 0), 4);
+        commissionsTitleLabel.Text = "Комиссии"; commissionsPanel.Controls.Add(filterLayout, 0, 1);
+        commissionsPanel.Controls.Add(commissionsButtonsPanel, 0, 2); commissionsPanel.Controls.Add(commissionsGrid, 0, 3);
+        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
+        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        filterLayout.ColumnCount = 3; filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F)); filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 165F));
+        filterLayout.Controls.Add(searchTextBox, 0, 0); filterLayout.Controls.Add(statusFilterComboBox, 2, 0); filterLayout.Dock = DockStyle.Fill;
+        filterLayout.Margin = new Padding(0, 0, 0, 8); searchTextBox.BorderStyle = BorderStyle.FixedSingle; searchTextBox.Dock = DockStyle.Fill;
+        searchTextBox.Font = new Font("Segoe UI", 10F); searchTextBox.Margin = new Padding(0, 5, 0, 5); searchTextBox.PlaceholderText = "Поиск комиссий";
+        searchTextBox.TextChanged += SearchTextBox_TextChanged; statusFilterComboBox.Dock = DockStyle.Fill;
+        statusFilterComboBox.DropDownStyle = ComboBoxStyle.DropDownList; statusFilterComboBox.Font = new Font("Segoe UI", 10F);
+        statusFilterComboBox.Items.AddRange(new object[] { "Все", "Активные", "Архивированные" }); statusFilterComboBox.Margin = new Padding(0, 4, 0, 4);
+        statusFilterComboBox.SelectedIndex = 1; statusFilterComboBox.SelectedIndexChanged += StatusFilterComboBox_SelectedIndexChanged;
+        commissionsButtonsPanel.Controls.Add(addButton); commissionsButtonsPanel.Controls.Add(editButton); commissionsButtonsPanel.Controls.Add(archiveButton);
+        commissionsButtonsPanel.Dock = DockStyle.Fill; commissionsButtonsPanel.Margin = new Padding(0, 0, 0, 10); commissionsButtonsPanel.WrapContents = false;
+        ConfigureSectionButton(addButton, "Добавить", 110); addButton.Click += AddButton_Click;
+        ConfigureSectionButton(editButton, "Изменить", 110); editButton.Click += EditButton_Click;
+        ConfigureSectionButton(archiveButton, "Архивировать", 135); archiveButton.Click += ArchiveButton_Click;
+        ConfigureGrid(commissionsGrid); commissionsGrid.Columns.AddRange(
+            new DataGridViewTextBoxColumn { HeaderText = "Название", Name = "nameColumn", FillWeight = 105 },
+            new DataGridViewTextBoxColumn { HeaderText = "Описание", Name = "descriptionColumn", FillWeight = 120 },
+            new DataGridViewTextBoxColumn { HeaderText = "Статус", Name = "statusColumn", FillWeight = 70 });
+        commissionsGrid.SelectionChanged += CommissionsGrid_SelectionChanged; commissionsGrid.CellDoubleClick += CommissionsGrid_CellDoubleClick;
+        ConfigureSection(membersPanel, membersTitleLabel, new Padding(8, 0, 0, 0), 3); membersTitleLabel.Text = "Состав комиссии";
+        membersPanel.Controls.Add(membersButtonsPanel, 0, 1); membersPanel.Controls.Add(membersGrid, 0, 2);
+        membersPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); membersPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 72F));
+        membersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); membersButtonsPanel.Controls.Add(editMembersButton);
+        membersButtonsPanel.Controls.Add(manageMembersButton); membersButtonsPanel.Dock = DockStyle.Fill;
+        membersButtonsPanel.Margin = new Padding(0, 0, 0, 12); membersButtonsPanel.WrapContents = false;
+        ConfigureSectionButton(editMembersButton, "Изменить состав", 155); editMembersButton.Click += EditMembersButton_Click;
+        ConfigureSectionButton(manageMembersButton, "Члены комиссии", 155); manageMembersButton.Click += ManageMembersButton_Click;
+        ConfigureGrid(membersGrid); membersGrid.Columns.AddRange(
+            new DataGridViewTextBoxColumn { HeaderText = "ФИО", Name = "fullNameColumn", FillWeight = 130 },
+            new DataGridViewTextBoxColumn { HeaderText = "Роль", Name = "roleColumn", FillWeight = 95 },
+            new DataGridViewTextBoxColumn { HeaderText = "Порядок", Name = "sortOrderColumn", FillWeight = 45 });
         AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background;
         Controls.Add(pageLayout); Font = new Font("Segoe UI", 9F); Name = "CommissionsControl"; Size = new Size(1340, 900);
         pageLayout.ResumeLayout(false); pageLayout.PerformLayout(); workspaceLayout.ResumeLayout(false); commissionsPanel.ResumeLayout(false);
-        commissionsPanel.PerformLayout(); membersPanel.ResumeLayout(false); membersPanel.PerformLayout(); commissionsButtonsPanel.ResumeLayout(false);
-        membersButtonsPanel.ResumeLayout(false); ((System.ComponentModel.ISupportInitialize)commissionsGrid).EndInit();
-        ((System.ComponentModel.ISupportInitialize)membersGrid).EndInit(); ResumeLayout(false);
+        commissionsPanel.PerformLayout(); filterLayout.ResumeLayout(false); filterLayout.PerformLayout(); commissionsButtonsPanel.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)commissionsGrid).EndInit(); membersPanel.ResumeLayout(false); membersPanel.PerformLayout();
+        membersButtonsPanel.ResumeLayout(false); ((System.ComponentModel.ISupportInitialize)membersGrid).EndInit(); ResumeLayout(false);
     }
 
-    private static void ConfigureSection(TableLayoutPanel panel, Label title, FlowLayoutPanel buttons, DataGridView grid, Padding margin)
+    private static void ConfigureSection(TableLayoutPanel panel, Label title, Padding margin, int rowCount)
     {
         panel.BackColor = AppColors.Surface; panel.BorderStyle = BorderStyle.FixedSingle; panel.ColumnCount = 1;
-        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); panel.Controls.Add(title, 0, 0); panel.Controls.Add(buttons, 0, 1);
-        panel.Controls.Add(grid, 0, 2); panel.Dock = DockStyle.Fill; panel.Margin = margin; panel.Padding = new Padding(20);
-        panel.RowCount = 3; panel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); panel.RowStyles.Add(new RowStyle(SizeType.Absolute, 64F));
-        panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); title.AutoSize = true; title.Font = new Font("Segoe UI Semibold", 15F);
-        title.ForeColor = AppColors.TextPrimary; title.Margin = new Padding(0, 0, 0, 12); buttons.Dock = DockStyle.Fill;
-        buttons.Margin = new Padding(0, 0, 0, 16); buttons.WrapContents = false;
+        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); panel.Controls.Add(title, 0, 0); panel.Dock = DockStyle.Fill;
+        panel.Margin = margin; panel.Padding = new Padding(20); panel.RowCount = rowCount; title.AutoSize = true;
+        title.Font = new Font("Segoe UI Semibold", 15F); title.ForeColor = AppColors.TextPrimary; title.Margin = new Padding(0, 0, 0, 12);
     }
 
     private static void ConfigureSectionButton(Button button, string text, int width)
@@ -76,5 +111,9 @@ partial class CommissionsControl
     }
 
     private static void ConfigureGrid(DataGridView grid)
-    { grid.Dock = DockStyle.Fill; grid.MultiSelect = false; grid.ReadOnly = true; grid.RowHeadersVisible = false; grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect; }
+    {
+        grid.AllowUserToAddRows = false; grid.AllowUserToDeleteRows = false; grid.AllowUserToResizeRows = false;
+        grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; grid.Dock = DockStyle.Fill; grid.MultiSelect = false;
+        grid.ReadOnly = true; grid.RowHeadersVisible = false; grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+    }
 }

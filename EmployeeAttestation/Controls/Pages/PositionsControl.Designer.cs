@@ -26,11 +26,14 @@ partial class PositionsControl
         subtitleLabel.Margin = new Padding(2, 0, 0, 30); subtitleLabel.Text = "Справочник должностей организации.";
         ConfigureToolbar(toolbarLayout, searchTextBox, addButton, editButton, deleteButton); searchTextBox.PlaceholderText = "Поиск должностей";
         ConfigureToolbarButton(addButton, "Добавить"); ConfigureToolbarButton(editButton, "Изменить"); ConfigureToolbarButton(deleteButton, "Удалить");
+        searchTextBox.TextChanged += SearchTextBox_TextChanged; addButton.Click += AddButton_Click;
+        editButton.Click += EditButton_Click; deleteButton.Click += DeleteButton_Click;
         positionsGrid.AllowUserToAddRows = false; positionsGrid.AllowUserToDeleteRows = false; positionsGrid.AllowUserToResizeRows = false;
         positionsGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         positionsGrid.Columns.AddRange(new DataGridViewTextBoxColumn { HeaderText = "Наименование", Name = "nameColumn", FillWeight = 160 },
-            new DataGridViewCheckBoxColumn { HeaderText = "Руководящая должность", Name = "managementColumn", FillWeight = 70 });
+            new DataGridViewTextBoxColumn { HeaderText = "Руководящая должность", Name = "managementColumn", FillWeight = 70 });
         ConfigureGrid(positionsGrid);
+        positionsGrid.CellDoubleClick += PositionsGrid_CellDoubleClick;
         AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background;
         Controls.Add(pageLayout); Font = new Font("Segoe UI", 9F); Name = "PositionsControl"; Size = new Size(1340, 900);
         pageLayout.ResumeLayout(false); pageLayout.PerformLayout(); toolbarLayout.ResumeLayout(false); toolbarLayout.PerformLayout();

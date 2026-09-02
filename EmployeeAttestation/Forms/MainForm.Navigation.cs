@@ -10,13 +10,19 @@ public partial class MainForm
         UserControl page = pageType switch
         {
             PageType.Home => new HomeControl(),
-            PageType.Employees => new EmployeesControl(),
+            PageType.Employees => databaseManager is null
+                ? new EmployeesControl()
+                : new EmployeesControl(databaseManager),
             PageType.Attestations => new AttestationsControl(),
-            PageType.Commissions => new CommissionsControl(),
+            PageType.Commissions => databaseManager is null
+                ? new CommissionsControl()
+                : new CommissionsControl(databaseManager),
             PageType.Departments => databaseManager is null
                 ? new DepartmentsControl()
                 : new DepartmentsControl(databaseManager),
-            PageType.Positions => new PositionsControl(),
+            PageType.Positions => databaseManager is null
+                ? new PositionsControl()
+                : new PositionsControl(databaseManager),
             PageType.Settings => databaseManager is null
                 ? new SettingsControl()
                 : new SettingsControl(databaseManager),
