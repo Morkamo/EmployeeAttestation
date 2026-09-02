@@ -13,7 +13,9 @@ public partial class MainForm
             PageType.Employees => databaseManager is null
                 ? new EmployeesControl()
                 : new EmployeesControl(databaseManager),
-            PageType.Attestations => new AttestationsControl(),
+            PageType.Attestations => databaseManager is null
+                ? new AttestationsControl()
+                : new AttestationsControl(databaseManager),
             PageType.Commissions => databaseManager is null
                 ? new CommissionsControl()
                 : new CommissionsControl(databaseManager),
