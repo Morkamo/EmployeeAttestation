@@ -14,6 +14,7 @@ public partial class AttestationsControl : UserControl
     private readonly CommissionService? commissionService;
     private readonly EvaluationCriterionService? criterionService;
     private readonly AttestationProcessService? processService;
+    private readonly AttestationDocumentService? documentService;
 
     public AttestationsControl()
     {
@@ -37,6 +38,7 @@ public partial class AttestationsControl : UserControl
         commissionService = new CommissionService(databaseManager);
         criterionService = new EvaluationCriterionService(databaseManager);
         processService = new AttestationProcessService(databaseManager);
+        documentService = new AttestationDocumentService(databaseManager);
     }
 
     protected override void OnLoad(EventArgs e)
@@ -138,7 +140,7 @@ public partial class AttestationsControl : UserControl
                 or AttestationStatusHelper.Decision
                 or AttestationStatusHelper.Completed)
             {
-                using AttestationProcessForm processForm = new(attestationService, processService, attestation.Id);
+                using AttestationProcessForm processForm = new(attestationService, processService, attestation.Id, documentService);
                 processForm.ShowDialog(this);
                 RefreshAttestations();
                 return;
@@ -187,7 +189,7 @@ public partial class AttestationsControl : UserControl
             RefreshAttestations();
             if (processService is not null)
             {
-                using AttestationProcessForm form = new(attestationService, processService, attestation.Id);
+                using AttestationProcessForm form = new(attestationService, processService, attestation.Id, documentService);
                 form.ShowDialog(this);
                 RefreshAttestations();
             }

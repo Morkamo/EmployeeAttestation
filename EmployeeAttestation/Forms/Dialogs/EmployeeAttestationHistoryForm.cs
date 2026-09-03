@@ -9,6 +9,7 @@ public partial class EmployeeAttestationHistoryForm : Form
 {
     private readonly AttestationService? attestationService;
     private readonly AttestationProcessService? processService;
+    private readonly AttestationDocumentService? documentService;
     private readonly Employee? employee;
 
     public EmployeeAttestationHistoryForm()
@@ -23,11 +24,13 @@ public partial class EmployeeAttestationHistoryForm : Form
     public EmployeeAttestationHistoryForm(
         AttestationService attestationService,
         AttestationProcessService processService,
+        AttestationDocumentService documentService,
         Employee employee)
         : this()
     {
         this.attestationService = attestationService ?? throw new ArgumentNullException(nameof(attestationService));
         this.processService = processService ?? throw new ArgumentNullException(nameof(processService));
+        this.documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
         this.employee = employee ?? throw new ArgumentNullException(nameof(employee));
         employeeLabel.Text = employee.FullName;
     }
@@ -58,7 +61,7 @@ public partial class EmployeeAttestationHistoryForm : Form
 
     private void OpenSelected()
     {
-        if (attestationService is null || processService is null) return;
+        if (attestationService is null || processService is null || documentService is null) return;
         AttestationListItem? item = GetSelected();
         if (item is null) return;
         if (item.Status is not (AttestationStatusHelper.InProgress or AttestationStatusHelper.Decision or AttestationStatusHelper.Completed))
@@ -67,7 +70,7 @@ public partial class EmployeeAttestationHistoryForm : Form
                 "История аттестаций", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        using AttestationProcessForm form = new(attestationService, processService, item.Id);
+        using AttestationProcessForm form = new(attestationService, processService, item.Id, documentService);
         form.ShowDialog(this);
         RefreshHistory();
     }

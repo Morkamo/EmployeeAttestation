@@ -13,6 +13,7 @@ public partial class EmployeesControl : UserControl
     private readonly PositionService? positionService;
     private readonly AttestationService? attestationService;
     private readonly AttestationProcessService? processService;
+    private readonly AttestationDocumentService? documentService;
 
     public EmployeesControl()
     {
@@ -33,6 +34,7 @@ public partial class EmployeesControl : UserControl
         positionService = new PositionService(databaseManager);
         attestationService = new AttestationService(databaseManager);
         processService = new AttestationProcessService(databaseManager);
+        documentService = new AttestationDocumentService(databaseManager);
     }
 
     protected override void OnLoad(EventArgs e)
@@ -158,14 +160,14 @@ public partial class EmployeesControl : UserControl
 
     private void OpenHistory()
     {
-        if (employeeService is null || attestationService is null || processService is null) return;
+        if (employeeService is null || attestationService is null || processService is null || documentService is null) return;
         EmployeeListItem? selected = GetSelectedEmployee();
         if (selected is null) { ShowSelectionRequired(); return; }
         try
         {
             Employee? employee = employeeService.GetById(selected.Id);
             if (employee is null) { ShowServiceError("Сотрудник не найден."); RefreshEmployees(); return; }
-            using EmployeeAttestationHistoryForm form = new(attestationService, processService, employee);
+            using EmployeeAttestationHistoryForm form = new(attestationService, processService, documentService, employee);
             form.ShowDialog(this);
         }
         catch (EmployeeServiceException exception) { ShowServiceError(exception.Message); }

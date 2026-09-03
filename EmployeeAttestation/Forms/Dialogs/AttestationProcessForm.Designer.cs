@@ -13,10 +13,12 @@ partial class AttestationProcessForm
     private FlowLayoutPanel evaluationButtons = null!; private Button saveScoresButton = null!; private Button transitionButton = null!;
     private TextBox decisionTextBox = null!; private TextBox recommendationsTextBox = null!; private DataGridView votesGrid = null!;
     private Label voteCountsLabel = null!; private FlowLayoutPanel decisionButtons = null!; private Button saveDecisionButton = null!; private Button completeButton = null!;
-    private FlowLayoutPanel footer = null!; private Button closeButton = null!;
+    private FlowLayoutPanel footer = null!; private Button saveDocumentButton = null!; private Button closeButton = null!;
+    private ToolTip saveDocumentToolTip = null!;
     protected override void Dispose(bool disposing) { if (disposing) components?.Dispose(); base.Dispose(disposing); }
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         rootLayout = new TableLayoutPanel(); tabs = new TabControl(); basicTab = new TabPage(); evaluationTab = new TabPage(); decisionTab = new TabPage();
         employeeValueLabel = new Label(); departmentValueLabel = new Label(); positionValueLabel = new Label(); dateValueLabel = new Label();
         commissionValueLabel = new Label(); statusValueLabel = new Label(); managerialValueLabel = new Label(); presenceList = new CheckedListBox();
@@ -24,15 +26,20 @@ partial class AttestationProcessForm
         managerialAverageLabel = new Label(); overallAverageLabel = new Label(); evaluationButtons = new FlowLayoutPanel(); saveScoresButton = new Button();
         transitionButton = new Button(); decisionTextBox = new TextBox(); recommendationsTextBox = new TextBox(); votesGrid = new DataGridView();
         voteCountsLabel = new Label(); decisionButtons = new FlowLayoutPanel(); saveDecisionButton = new Button(); completeButton = new Button();
-        footer = new FlowLayoutPanel(); closeButton = new Button(); SuspendLayout();
+        footer = new FlowLayoutPanel(); saveDocumentButton = new Button(); closeButton = new Button();
+        saveDocumentToolTip = new ToolTip(components); SuspendLayout();
         rootLayout.ColumnCount = 1; rootLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); rootLayout.Dock = DockStyle.Fill;
         rootLayout.Padding = new Padding(18); rootLayout.RowCount = 2; rootLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 62F)); tabs.Dock = DockStyle.Fill; tabs.Font = new Font("Segoe UI", 10F);
         tabs.TabPages.AddRange(basicTab, evaluationTab, decisionTab); rootLayout.Controls.Add(tabs, 0, 0);
         ConfigureBasicTab(); ConfigureEvaluationTab(); ConfigureDecisionTab();
-        footer.Dock = DockStyle.Fill; footer.FlowDirection = FlowDirection.RightToLeft; footer.Controls.Add(closeButton);
-        ConfigureButton(closeButton, "Закрыть", 120); closeButton.DialogResult = DialogResult.Cancel; rootLayout.Controls.Add(footer, 0, 1);
-        CancelButton = closeButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background; ClientSize = new Size(1260, 820);
+        footer.Dock = DockStyle.Fill; footer.FlowDirection = FlowDirection.RightToLeft; footer.Controls.Add(closeButton); footer.Controls.Add(saveDocumentButton);
+        footer.MouseLeave += Footer_MouseLeave; footer.MouseMove += Footer_MouseMove;
+        ConfigureButton(closeButton, "Закрыть", 120); closeButton.DialogResult = DialogResult.Cancel;
+        ConfigureButton(saveDocumentButton, "Сохранить", 120); saveDocumentButton.Enabled = false; saveDocumentButton.Click += SaveDocumentButton_Click;
+        saveDocumentToolTip.AutoPopDelay = 5000; saveDocumentToolTip.InitialDelay = 350; saveDocumentToolTip.ReshowDelay = 100;
+        rootLayout.Controls.Add(footer, 0, 1);
+        CancelButton = closeButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background; ClientSize = new Size(940, 620);
         Controls.Add(rootLayout); MinimumSize = new Size(760, 500); Name = "AttestationProcessForm"; StartPosition = FormStartPosition.CenterParent;
         Text = "Проведение аттестации"; ResumeLayout(false);
     }

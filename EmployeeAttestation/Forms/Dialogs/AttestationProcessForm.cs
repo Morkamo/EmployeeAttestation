@@ -9,12 +9,15 @@ public partial class AttestationProcessForm : Form
 {
     private readonly AttestationService? attestationService;
     private readonly AttestationProcessService? processService;
+    private readonly AttestationDocumentService? documentService;
     private readonly int attestationId;
     private Attestation? attestation;
     private List<AttestationCriterion> criteria = [];
     private List<AttestationCommissionMember> members = [];
     private readonly Dictionary<(int MemberId, int CriterionId), ComboBox> scoreControls = [];
     private bool loading;
+    private bool documentTooltipVisible;
+    private const string DocumentDisabledTooltip = "Для сохранения необходимо завершить аттестацию.";
 
     public AttestationProcessForm()
     {
@@ -23,6 +26,7 @@ public partial class AttestationProcessForm : Form
         AppControlStyles.ApplyPrimaryButton(completeButton);
         AppControlStyles.ApplySecondaryButton(saveScoresButton);
         AppControlStyles.ApplySecondaryButton(saveDecisionButton);
+        AppControlStyles.ApplySecondaryButton(saveDocumentButton);
         AppControlStyles.ApplySecondaryButton(closeButton);
         AppControlStyles.ApplyGrid(votesGrid);
         LoadWindowIcon();
@@ -31,11 +35,13 @@ public partial class AttestationProcessForm : Form
     public AttestationProcessForm(
         AttestationService attestationService,
         AttestationProcessService processService,
-        int attestationId)
+        int attestationId,
+        AttestationDocumentService? documentService = null)
         : this()
     {
         this.attestationService = attestationService ?? throw new ArgumentNullException(nameof(attestationService));
         this.processService = processService ?? throw new ArgumentNullException(nameof(processService));
+        this.documentService = documentService;
         this.attestationId = attestationId > 0 ? attestationId : throw new ArgumentOutOfRangeException(nameof(attestationId));
     }
 
@@ -55,7 +61,26 @@ public partial class AttestationProcessForm : Form
     private void TransitionButton_Click(object? sender, EventArgs e) => TransitionToDecision();
     private void SaveDecisionButton_Click(object? sender, EventArgs e) => SaveDecision();
     private void CompleteButton_Click(object? sender, EventArgs e) => CompleteAttestation();
+    private void SaveDocumentButton_Click(object? sender, EventArgs e) => SaveDocument();
     private void VotesGrid_CellValueChanged(object? sender, DataGridViewCellEventArgs e) => UpdateVoteCounts();
+
+    private void Footer_MouseMove(object? sender, MouseEventArgs e)
+    {
+        if (saveDocumentButton.Enabled || !saveDocumentButton.Bounds.Contains(e.Location))
+        {
+            HideDocumentTooltip();
+            return;
+        }
+
+        if (documentTooltipVisible) return;
+        saveDocumentToolTip.Show(DocumentDisabledTooltip, footer,
+            saveDocumentButton.Left + saveDocumentButton.Width / 2,
+            saveDocumentButton.Top - 8,
+            5000);
+        documentTooltipVisible = true;
+    }
+
+    private void Footer_MouseLeave(object? sender, EventArgs e) => HideDocumentTooltip();
 
     private void LoadProcess(bool selectDecisionTab = false)
     {
@@ -243,6 +268,8 @@ public partial class AttestationProcessForm : Form
         saveDecisionButton.Visible = decision;
         completeButton.Visible = decision;
         if (completed) Text = "Завершенная аттестация";
+        saveDocumentButton.Enabled = completed && documentService is not null;
+        saveDocumentToolTip.SetToolTip(saveDocumentButton, saveDocumentButton.Enabled ? string.Empty : DocumentDisabledTooltip);
         UpdateScoreAvailability();
     }
 
@@ -304,6 +331,54 @@ public partial class AttestationProcessForm : Form
         catch (AttestationProcessServiceException exception) { ShowError(exception.Message); }
     }
 
+    private void SaveDocument()
+    {
+        if (attestation?.Status != AttestationStatusHelper.Completed || documentService is null) return;
+
+        using DocumentFormatSelectForm formatForm = new();
+        if (formatForm.ShowDialog(this) != DialogResult.OK) return;
+
+        string extension = formatForm.SelectedFormat == AttestationDocumentFormat.Docx ? "docx" : "pdf";
+        try
+        {
+            using SaveFileDialog saveDialog = new()
+            {
+                AddExtension = true,
+                DefaultExt = extension,
+                FileName = documentService.GetDefaultFileName(attestationId, extension),
+                Filter = extension == "docx"
+                    ? "Word document (*.docx)|*.docx"
+                    : "PDF document (*.pdf)|*.pdf",
+                OverwritePrompt = true,
+                Title = "Сохранить аттестационный лист"
+            };
+            if (saveDialog.ShowDialog(this) != DialogResult.OK) return;
+
+            if (formatForm.SelectedFormat == AttestationDocumentFormat.Docx)
+                documentService.SaveDocx(attestationId, saveDialog.FileName);
+            else
+                documentService.SavePdf(attestationId, saveDialog.FileName);
+
+            MessageBox.Show(this, $"Документ успешно сохранен.{Environment.NewLine}{saveDialog.FileName}",
+                "Аттестация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (AttestationDocumentServiceException exception)
+        {
+            ShowDocumentError(exception.Message);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            ShowDocumentError("Проверьте выбранный путь и доступ к файлу.");
+        }
+    }
+
+    private void HideDocumentTooltip()
+    {
+        if (!documentTooltipVisible) return;
+        saveDocumentToolTip.Hide(footer);
+        documentTooltipVisible = false;
+    }
+
     private IReadOnlyCollection<int> GetPresentMemberIds()
     {
         List<int> ids = [];
@@ -361,6 +436,10 @@ public partial class AttestationProcessForm : Form
 
     private void ShowError(string message) => MessageBox.Show(
         this, message, "Аттестация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+    private void ShowDocumentError(string reason) => MessageBox.Show(
+        this, $"Не удалось сохранить документ.{Environment.NewLine}{reason}",
+        "Аттестация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
     private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico"); if (File.Exists(path)) Icon = new Icon(path); }
 }
