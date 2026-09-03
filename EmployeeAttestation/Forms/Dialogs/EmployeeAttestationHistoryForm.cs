@@ -75,5 +75,5 @@ public partial class EmployeeAttestationHistoryForm : Form
     private AttestationListItem? GetSelected() => historyGrid.SelectedRows.Count == 1
         ? historyGrid.SelectedRows[0].Tag as AttestationListItem : null;
     private void ShowError(string message) => MessageBox.Show(this, message, "История аттестаций", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico"); if (File.Exists(path)) Icon = new Icon(path); }
+    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico"); if (File.Exists(path)) Icon = new Icon(path); }
 }

@@ -1,5 +1,6 @@
 using EmployeeAttestation.Data;
 using EmployeeAttestation.Events;
+using EmployeeAttestation.Extra;
 
 namespace EmployeeAttestation.Forms;
 
@@ -22,13 +23,14 @@ public partial class MainForm : Form
     private void InitializeMainForm()
     {
         InitializeComponent();
+        Text = GeneralProperties.WindowTitle;
         LoadWindowIcon();
         OpenPage(PageType.Home);
     }
 
     private void LoadWindowIcon()
     {
-        string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico");
+        string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico");
         if (File.Exists(iconPath))
         {
             Icon = new Icon(iconPath);

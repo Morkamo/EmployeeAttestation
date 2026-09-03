@@ -362,5 +362,5 @@ public partial class AttestationProcessForm : Form
     private void ShowError(string message) => MessageBox.Show(
         this, message, "Аттестация", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico"); if (File.Exists(path)) Icon = new Icon(path); }
+    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico"); if (File.Exists(path)) Icon = new Icon(path); }
 }

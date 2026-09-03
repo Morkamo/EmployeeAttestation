@@ -4,12 +4,12 @@ namespace EmployeeAttestation.Controls;
 
 public partial class SidebarControl : UserControl
 {
-    private Image? placeholderIcon;
+    private readonly List<Image> navigationIcons = [];
 
     public SidebarControl()
     {
         InitializeComponent();
-        LoadPlaceholderIcons();
+        LoadNavigationIcons();
         SetSelectedPage(PageType.Home);
     }
 
@@ -43,22 +43,60 @@ public partial class SidebarControl : UserControl
         _ => throw new ArgumentOutOfRangeException(nameof(pageType))
     };
 
-    private void LoadPlaceholderIcons()
+    private void LoadNavigationIcons()
     {
-        string imagePath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "null-icon.png");
-        if (!File.Exists(imagePath))
-        {
-            return;
-        }
-
-        using Image sourceImage = Image.FromFile(imagePath);
-        placeholderIcon = new Bitmap(sourceImage, new Size(24, 24));
         foreach (Control control in navigationPanel.Controls)
         {
-            if (control is Button button)
+            if (control is Button button && button.Tag is PageType pageType)
             {
-                button.Image = placeholderIcon;
+                button.Image = LoadIcon(pageType);
             }
         }
+    }
+
+    private Image? LoadIcon(PageType pageType)
+    {
+        string fileName = pageType switch
+        {
+            PageType.Home => "home-icon.png",
+            PageType.Employees => "employee-icon.png",
+            PageType.Attestations => "attestation-icon.png",
+            PageType.Commissions => "squad_testers-icon.png",
+            PageType.Departments => "departments-icon.png",
+            PageType.Positions => "rank-icon.png",
+            PageType.Settings => "settings-icon.png",
+            _ => "null-icon.png"
+        };
+
+        string imagePath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", fileName);
+        string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", Path.ChangeExtension(fileName, ".ico"));
+        string fallbackPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Images", "null-icon.png");
+
+        if (File.Exists(imagePath))
+        {
+            using Image sourceImage = Image.FromFile(imagePath);
+            Bitmap imageIcon = new(sourceImage, new Size(40, 40));
+            navigationIcons.Add(imageIcon);
+            return imageIcon;
+        }
+
+        if (File.Exists(iconPath))
+        {
+            using Icon sourceIcon = new(iconPath, new Size(40, 40));
+            using Bitmap sourceBitmap = sourceIcon.ToBitmap();
+            Bitmap icoIcon = new(sourceBitmap, new Size(40, 40));
+            navigationIcons.Add(icoIcon);
+            return icoIcon;
+        }
+
+        if (!File.Exists(fallbackPath))
+        {
+            return null;
+        }
+
+        using Image fallbackImage = Image.FromFile(fallbackPath);
+        Bitmap fallbackIcon = new(fallbackImage, new Size(40, 40));
+        navigationIcons.Add(fallbackIcon);
+        return fallbackIcon;
     }
 }

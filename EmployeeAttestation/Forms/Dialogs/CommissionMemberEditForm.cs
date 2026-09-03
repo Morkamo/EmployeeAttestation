@@ -76,7 +76,7 @@ public partial class CommissionMemberEditForm : Form
 
     private void LoadWindowIcon()
     {
-        string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico");
+        string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico");
         if (File.Exists(iconPath)) Icon = new Icon(iconPath);
     }
 }

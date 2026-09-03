@@ -112,5 +112,5 @@ public partial class AttestationCriteriaSelectForm : Form
         _ => 4
     };
 
-    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico"); if (File.Exists(path)) Icon = new Icon(path); }
+    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico"); if (File.Exists(path)) Icon = new Icon(path); }
 }

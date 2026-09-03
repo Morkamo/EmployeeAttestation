@@ -22,7 +22,10 @@ partial class SidebarControl
     {
         if (disposing)
         {
-            placeholderIcon?.Dispose();
+            foreach (Image icon in navigationIcons)
+            {
+                icon.Dispose();
+            }
             components?.Dispose();
         }
         base.Dispose(disposing);
@@ -54,13 +57,13 @@ partial class SidebarControl
         navigationPanel.Name = "navigationPanel";
         navigationPanel.Padding = new Padding(12, 10, 12, 10);
         navigationPanel.RowCount = 7;
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
         navigationPanel.Size = new Size(259, 824);
         navigationPanel.TabIndex = 1;
         navigationPanel.Controls.Add(homeButton, 0, 0);
@@ -154,8 +157,8 @@ partial class SidebarControl
             ForeColor = AppColors.TextPrimary,
             ImageAlign = ContentAlignment.MiddleLeft,
             Margin = new Padding(0, 0, 0, 4),
-            Padding = new Padding(16, 0, 12, 0),
-            Size = new Size(235, 54),
+            Padding = new Padding(14, 0, 12, 0),
+            Size = new Size(235, 62),
             TabIndex = (int)pageType,
             Tag = pageType,
             Text = GetPageTitle(pageType),

@@ -55,8 +55,8 @@ partial class CommissionsControl
         ConfigureSection(commissionsPanel, commissionsTitleLabel, new Padding(0, 0, 8, 0), 4);
         commissionsTitleLabel.Text = "Комиссии"; commissionsPanel.Controls.Add(filterLayout, 0, 1);
         commissionsPanel.Controls.Add(commissionsButtonsPanel, 0, 2); commissionsPanel.Controls.Add(commissionsGrid, 0, 3);
-        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+        commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F)); commissionsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         filterLayout.ColumnCount = 3; filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F)); filterLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 165F));
         filterLayout.Controls.Add(searchTextBox, 0, 0); filterLayout.Controls.Add(statusFilterComboBox, 2, 0); filterLayout.Dock = DockStyle.Fill;
@@ -67,7 +67,7 @@ partial class CommissionsControl
         statusFilterComboBox.Items.AddRange(new object[] { "Все", "Активные", "Архивированные" }); statusFilterComboBox.Margin = new Padding(0, 2, 0, 5);
         statusFilterComboBox.SelectedIndex = 1; statusFilterComboBox.SelectedIndexChanged += StatusFilterComboBox_SelectedIndexChanged;
         commissionsButtonsPanel.AutoScroll = true; commissionsButtonsPanel.Controls.Add(addButton); commissionsButtonsPanel.Controls.Add(editButton); commissionsButtonsPanel.Controls.Add(archiveButton);
-        commissionsButtonsPanel.Dock = DockStyle.Fill; commissionsButtonsPanel.Margin = new Padding(0, 4, 0, 8); commissionsButtonsPanel.WrapContents = true;
+        commissionsButtonsPanel.Dock = DockStyle.Fill; commissionsButtonsPanel.Margin = new Padding(0, 3, 0, 4); commissionsButtonsPanel.WrapContents = true;
         ConfigureSectionButton(addButton, "Добавить", 110); addButton.Click += AddButton_Click;
         ConfigureSectionButton(editButton, "Изменить", 110); editButton.Click += EditButton_Click;
         ConfigureSectionButton(archiveButton, "Архивировать", 135); archiveButton.Click += ArchiveButton_Click;
@@ -78,10 +78,10 @@ partial class CommissionsControl
         commissionsGrid.SelectionChanged += CommissionsGrid_SelectionChanged; commissionsGrid.CellDoubleClick += CommissionsGrid_CellDoubleClick;
         ConfigureSection(membersPanel, membersTitleLabel, new Padding(8, 0, 0, 0), 3); membersTitleLabel.Text = "Состав комиссии";
         membersPanel.Controls.Add(membersButtonsPanel, 0, 1); membersPanel.Controls.Add(membersGrid, 0, 2);
-        membersPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); membersPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        membersPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize)); membersPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
         membersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); membersButtonsPanel.Controls.Add(editMembersButton);
         membersButtonsPanel.Controls.Add(manageMembersButton); membersButtonsPanel.AutoScroll = true; membersButtonsPanel.Dock = DockStyle.Fill;
-        membersButtonsPanel.Margin = new Padding(0, 4, 0, 10); membersButtonsPanel.WrapContents = true;
+        membersButtonsPanel.Margin = new Padding(0, 3, 0, 4); membersButtonsPanel.WrapContents = true;
         ConfigureSectionButton(editMembersButton, "Изменить состав", 155); editMembersButton.Click += EditMembersButton_Click;
         ConfigureSectionButton(manageMembersButton, "Члены комиссии", 155); manageMembersButton.Click += ManageMembersButton_Click;
         ConfigureGrid(membersGrid); membersGrid.Columns.AddRange(
@@ -106,7 +106,7 @@ partial class CommissionsControl
 
     private static void ConfigureSectionButton(Button button, string text, int width)
     {
-        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 0, 8, 6);
+        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 0, 8, 4);
         button.Size = new Size(width, 40); button.Padding = new Padding(10, 0, 10, 0); button.Text = text; button.UseVisualStyleBackColor = false;
     }
 

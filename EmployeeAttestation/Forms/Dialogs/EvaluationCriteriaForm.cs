@@ -135,7 +135,7 @@ public partial class EvaluationCriteriaForm : Form
     }
     private void ShowSelectionRequired() => MessageBox.Show(this, "Выберите критерий.", "Критерии", MessageBoxButtons.OK, MessageBoxIcon.Information);
     private void ShowError(string message) => MessageBox.Show(this, message, "Критерии", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "null-icon.ico"); if (File.Exists(path)) Icon = new Icon(path); }
+    private void LoadWindowIcon() { string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "program-logo.ico"); if (File.Exists(path)) Icon = new Icon(path); }
     private sealed record FilterItem(string Text, string? Value) { public override string ToString() => Text; }
     private sealed record ActivityFilterItem(string Text, bool? Value) { public override string ToString() => Text; }
 }
