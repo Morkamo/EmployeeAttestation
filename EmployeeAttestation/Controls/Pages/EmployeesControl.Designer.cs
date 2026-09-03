@@ -14,6 +14,7 @@ partial class EmployeesControl
     private Button addButton = null!;
     private Button editButton = null!;
     private Button archiveButton = null!;
+    private Button historyButton = null!;
     private DataGridView employeesGrid = null!;
 
     protected override void Dispose(bool disposing) { if (disposing) components?.Dispose(); base.Dispose(disposing); }
@@ -22,7 +23,7 @@ partial class EmployeesControl
     {
         pageLayout = new TableLayoutPanel(); titleLabel = new Label(); subtitleLabel = new Label();
         toolbarLayout = new TableLayoutPanel(); searchTextBox = new TextBox(); statusFilterComboBox = new ComboBox(); addButton = new Button();
-        editButton = new Button(); archiveButton = new Button(); employeesGrid = new DataGridView();
+        editButton = new Button(); archiveButton = new Button(); historyButton = new Button(); employeesGrid = new DataGridView();
         pageLayout.SuspendLayout(); toolbarLayout.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)employeesGrid).BeginInit(); SuspendLayout();
         pageLayout.ColumnCount = 1; pageLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -35,13 +36,15 @@ partial class EmployeesControl
         titleLabel.ForeColor = AppColors.TextPrimary; titleLabel.Margin = new Padding(0, 0, 0, 6); titleLabel.Text = "Сотрудники";
         subtitleLabel.AutoSize = true; subtitleLabel.Font = new Font("Segoe UI", 11F); subtitleLabel.ForeColor = AppColors.TextSecondary;
         subtitleLabel.Margin = new Padding(2, 0, 0, 30); subtitleLabel.Text = "Просмотр и управление списком сотрудников организации.";
-        ConfigureToolbar(toolbarLayout, searchTextBox, statusFilterComboBox, addButton, editButton, archiveButton);
+        ConfigureToolbar(toolbarLayout, searchTextBox, statusFilterComboBox, addButton, editButton, archiveButton, historyButton);
         searchTextBox.PlaceholderText = "Поиск сотрудников";
         statusFilterComboBox.DropDownStyle = ComboBoxStyle.DropDownList; statusFilterComboBox.Font = new Font("Segoe UI", 10F);
         statusFilterComboBox.Items.AddRange(new object[] { "Все", "Активные", "Архивированные" }); statusFilterComboBox.SelectedIndex = 1;
         ConfigureToolbarButton(addButton, "Добавить"); ConfigureToolbarButton(editButton, "Изменить"); ConfigureToolbarButton(archiveButton, "Архивировать");
+        ConfigureToolbarButton(historyButton, "История");
         searchTextBox.TextChanged += SearchTextBox_TextChanged; statusFilterComboBox.SelectedIndexChanged += StatusFilterComboBox_SelectedIndexChanged;
         addButton.Click += AddButton_Click; editButton.Click += EditButton_Click; archiveButton.Click += ArchiveButton_Click;
+        historyButton.Click += HistoryButton_Click;
         employeesGrid.AllowUserToAddRows = false; employeesGrid.AllowUserToDeleteRows = false; employeesGrid.AllowUserToResizeRows = false;
         employeesGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         employeesGrid.Columns.AddRange(new DataGridViewTextBoxColumn { HeaderText = "ФИО", Name = "fullNameColumn" },
@@ -57,15 +60,16 @@ partial class EmployeesControl
         ((System.ComponentModel.ISupportInitialize)employeesGrid).EndInit(); ResumeLayout(false);
     }
 
-    private static void ConfigureToolbar(TableLayoutPanel toolbar, TextBox search, ComboBox filter, Button first, Button second, Button third)
+    private static void ConfigureToolbar(TableLayoutPanel toolbar, TextBox search, ComboBox filter, Button first, Button second, Button third, Button fourth)
     {
-        toolbar.BackColor = AppColors.Surface; toolbar.ColumnCount = 9;
+        toolbar.BackColor = AppColors.Surface; toolbar.ColumnCount = 11;
         toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 12F));
         toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180F)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
         toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
         toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-        toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F)); toolbar.Controls.Add(search, 0, 0); toolbar.Controls.Add(filter, 2, 0);
-        toolbar.Controls.Add(first, 4, 0); toolbar.Controls.Add(second, 6, 0); toolbar.Controls.Add(third, 8, 0); toolbar.Dock = DockStyle.Fill;
+        toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F)); toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+        toolbar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F)); toolbar.Controls.Add(search, 0, 0); toolbar.Controls.Add(filter, 2, 0);
+        toolbar.Controls.Add(first, 4, 0); toolbar.Controls.Add(second, 6, 0); toolbar.Controls.Add(third, 8, 0); toolbar.Controls.Add(fourth, 10, 0); toolbar.Dock = DockStyle.Fill;
         toolbar.Margin = new Padding(0, 0, 0, 16); toolbar.Padding = new Padding(16);
         search.BorderStyle = BorderStyle.FixedSingle; search.Dock = DockStyle.Fill; search.Font = new Font("Segoe UI", 11F); search.Margin = new Padding(0, 8, 0, 7);
         filter.Dock = DockStyle.Fill; filter.Margin = new Padding(0, 7, 0, 7);

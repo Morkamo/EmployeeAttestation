@@ -10,9 +10,12 @@ public partial class AttestationEditForm : Form
     private readonly AttestationService? attestationService;
     private readonly EmployeeService? employeeService;
     private readonly CommissionService? commissionService;
+    private readonly EvaluationCriterionService? criterionService;
     private readonly Attestation? attestation;
     private readonly bool readOnlyMode;
     private bool loadingValues;
+    private HashSet<int> selectedCriterionIds = [];
+    private IReadOnlyCollection<AttestationCriterion> existingCriteria = [];
 
     public AttestationEditForm()
     {
@@ -20,6 +23,7 @@ public partial class AttestationEditForm : Form
         AppControlStyles.ApplyPrimaryButton(scheduleButton);
         AppControlStyles.ApplySecondaryButton(saveDraftButton);
         AppControlStyles.ApplySecondaryButton(cancelButton);
+        AppControlStyles.ApplySecondaryButton(selectCriteriaButton);
         LoadWindowIcon();
     }
 
@@ -27,6 +31,7 @@ public partial class AttestationEditForm : Form
         AttestationService attestationService,
         EmployeeService employeeService,
         CommissionService commissionService,
+        EvaluationCriterionService criterionService,
         Attestation? attestation = null,
         bool readOnly = false)
         : this()
@@ -34,6 +39,7 @@ public partial class AttestationEditForm : Form
         this.attestationService = attestationService ?? throw new ArgumentNullException(nameof(attestationService));
         this.employeeService = employeeService ?? throw new ArgumentNullException(nameof(employeeService));
         this.commissionService = commissionService ?? throw new ArgumentNullException(nameof(commissionService));
+        this.criterionService = criterionService ?? throw new ArgumentNullException(nameof(criterionService));
         this.attestation = attestation;
         readOnlyMode = readOnly || (attestation is not null && !AttestationStatusHelper.CanEdit(attestation.Status));
         ConfigureMode();
@@ -45,6 +51,7 @@ public partial class AttestationEditForm : Form
         if (!loadingValues && employeeComboBox.SelectedItem is EmployeeListItem employee)
         {
             evaluateManagerialCheckBox.Checked = employee.IsManager;
+            if (attestation is null) LoadDefaultCriteria();
         }
     }
 
@@ -68,6 +75,7 @@ public partial class AttestationEditForm : Form
             commissionComboBox.Enabled = false;
             attestationDatePicker.Enabled = false;
             evaluateManagerialCheckBox.Enabled = false;
+            selectCriteriaButton.Visible = false;
             saveDraftButton.Visible = false;
             scheduleButton.Visible = false;
             cancelButton.Text = "Закрыть";
@@ -114,6 +122,7 @@ public partial class AttestationEditForm : Form
                 {
                     evaluateManagerialCheckBox.Checked = selectedEmployee.IsManager;
                 }
+                LoadDefaultCriteria();
                 return;
             }
 
@@ -125,8 +134,17 @@ public partial class AttestationEditForm : Form
                 attestationDatePicker.Value = attestation.AttestationDate.Value;
             }
             evaluateManagerialCheckBox.Checked = attestation.EvaluateManagerial;
+            existingCriteria = attestationService?.GetCriteria(attestation.Id) ?? [];
+            selectedCriterionIds = existingCriteria
+                .Where(item => item.CriterionId.HasValue)
+                .Select(item => item.CriterionId!.Value)
+                .ToHashSet();
+            UpdateCriteriaCount();
         }
-        catch (Exception exception) when (exception is EmployeeServiceException or CommissionServiceException)
+        catch (Exception exception) when (exception is EmployeeServiceException
+            or CommissionServiceException
+            or EvaluationCriterionServiceException
+            or AttestationServiceException)
         {
             saveDraftButton.Enabled = false;
             scheduleButton.Enabled = false;
@@ -198,15 +216,15 @@ public partial class AttestationEditForm : Form
         {
             if (attestation?.Status == AttestationStatusHelper.Scheduled)
             {
-                attestationService.UpdateScheduled(value);
+                attestationService.UpdateScheduled(value, selectedCriterionIds);
             }
             else if (schedule)
             {
-                attestationService.SaveScheduled(value);
+                attestationService.SaveScheduled(value, selectedCriterionIds);
             }
             else
             {
-                attestationService.SaveDraft(value);
+                attestationService.SaveDraft(value, selectedCriterionIds);
             }
 
             DialogResult = DialogResult.OK;
@@ -222,6 +240,51 @@ public partial class AttestationEditForm : Form
                 MessageBoxIcon.Warning);
         }
     }
+
+    private void EvaluateManagerialCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        if (loadingValues || criterionService is null) return;
+        try
+        {
+            if (!evaluateManagerialCheckBox.Checked)
+            {
+                HashSet<int> managerialIds = criterionService.GetActive(true)
+                    .Where(item => item.ManagersOnly)
+                    .Select(item => item.Id)
+                    .ToHashSet();
+                selectedCriterionIds.RemoveWhere(managerialIds.Contains);
+                UpdateCriteriaCount();
+            }
+        }
+        catch (EvaluationCriterionServiceException exception)
+        {
+            MessageBox.Show(this, exception.Message, "Аттестации", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void SelectCriteriaButton_Click(object? sender, EventArgs e)
+    {
+        if (criterionService is null || readOnlyMode) return;
+        using AttestationCriteriaSelectForm form = new(
+            criterionService,
+            selectedCriterionIds,
+            evaluateManagerialCheckBox.Checked,
+            existingCriteria);
+        if (form.ShowDialog(this) != DialogResult.OK) return;
+        selectedCriterionIds = form.SelectedCriterionIds.ToHashSet();
+        UpdateCriteriaCount();
+    }
+
+    private void LoadDefaultCriteria()
+    {
+        if (criterionService is null) return;
+        selectedCriterionIds = criterionService.GetActive(evaluateManagerialCheckBox.Checked)
+            .Select(item => item.Id)
+            .ToHashSet();
+        UpdateCriteriaCount();
+    }
+
+    private void UpdateCriteriaCount() => criteriaCountLabel.Text = $"Выбрано: {selectedCriterionIds.Count}";
 
     private void ShowValidationMessage(string message, Control control)
     {

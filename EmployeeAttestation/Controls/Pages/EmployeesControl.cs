@@ -11,6 +11,8 @@ public partial class EmployeesControl : UserControl
     private readonly EmployeeService? employeeService;
     private readonly DepartmentService? departmentService;
     private readonly PositionService? positionService;
+    private readonly AttestationService? attestationService;
+    private readonly AttestationProcessService? processService;
 
     public EmployeesControl()
     {
@@ -19,6 +21,7 @@ public partial class EmployeesControl : UserControl
         AppControlStyles.ApplyPrimaryButton(addButton);
         AppControlStyles.ApplySecondaryButton(editButton);
         AppControlStyles.ApplySecondaryButton(archiveButton);
+        AppControlStyles.ApplySecondaryButton(historyButton);
     }
 
     public EmployeesControl(DatabaseManager databaseManager)
@@ -28,6 +31,8 @@ public partial class EmployeesControl : UserControl
         employeeService = new EmployeeService(databaseManager);
         departmentService = new DepartmentService(databaseManager);
         positionService = new PositionService(databaseManager);
+        attestationService = new AttestationService(databaseManager);
+        processService = new AttestationProcessService(databaseManager);
     }
 
     protected override void OnLoad(EventArgs e)
@@ -45,6 +50,7 @@ public partial class EmployeesControl : UserControl
     private void EditButton_Click(object? sender, EventArgs e) => EditSelectedEmployee();
 
     private void ArchiveButton_Click(object? sender, EventArgs e) => ArchiveOrRestoreSelectedEmployee();
+    private void HistoryButton_Click(object? sender, EventArgs e) => OpenHistory();
 
     private void EmployeesGrid_SelectionChanged(object? sender, EventArgs e) => UpdateArchiveButtonText();
 
@@ -148,6 +154,21 @@ public partial class EmployeesControl : UserControl
         {
             ShowServiceError(exception.Message);
         }
+    }
+
+    private void OpenHistory()
+    {
+        if (employeeService is null || attestationService is null || processService is null) return;
+        EmployeeListItem? selected = GetSelectedEmployee();
+        if (selected is null) { ShowSelectionRequired(); return; }
+        try
+        {
+            Employee? employee = employeeService.GetById(selected.Id);
+            if (employee is null) { ShowServiceError("Сотрудник не найден."); RefreshEmployees(); return; }
+            using EmployeeAttestationHistoryForm form = new(attestationService, processService, employee);
+            form.ShowDialog(this);
+        }
+        catch (EmployeeServiceException exception) { ShowServiceError(exception.Message); }
     }
 
     private bool? GetArchiveFilter() => statusFilterComboBox.SelectedIndex switch

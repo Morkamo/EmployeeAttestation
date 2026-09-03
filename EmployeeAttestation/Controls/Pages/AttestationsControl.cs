@@ -12,6 +12,8 @@ public partial class AttestationsControl : UserControl
     private readonly AttestationService? attestationService;
     private readonly EmployeeService? employeeService;
     private readonly CommissionService? commissionService;
+    private readonly EvaluationCriterionService? criterionService;
+    private readonly AttestationProcessService? processService;
 
     public AttestationsControl()
     {
@@ -21,6 +23,7 @@ public partial class AttestationsControl : UserControl
         AppControlStyles.ApplySecondaryButton(openButton);
         AppControlStyles.ApplySecondaryButton(startButton);
         AppControlStyles.ApplySecondaryButton(cancelAttestationButton);
+        AppControlStyles.ApplySecondaryButton(criteriaButton);
         InitializeStatusFilter();
         UpdateButtonState();
     }
@@ -32,6 +35,8 @@ public partial class AttestationsControl : UserControl
         attestationService = new AttestationService(databaseManager);
         employeeService = new EmployeeService(databaseManager);
         commissionService = new CommissionService(databaseManager);
+        criterionService = new EvaluationCriterionService(databaseManager);
+        processService = new AttestationProcessService(databaseManager);
     }
 
     protected override void OnLoad(EventArgs e)
@@ -46,6 +51,7 @@ public partial class AttestationsControl : UserControl
     private void OpenButton_Click(object? sender, EventArgs e) => OpenSelectedAttestation();
     private void StartButton_Click(object? sender, EventArgs e) => StartSelectedAttestation();
     private void CancelAttestationButton_Click(object? sender, EventArgs e) => CancelSelectedAttestation();
+    private void CriteriaButton_Click(object? sender, EventArgs e) => OpenCriteriaDirectory();
     private void AttestationsGrid_SelectionChanged(object? sender, EventArgs e) => UpdateButtonState();
 
     private void AttestationsGrid_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
@@ -102,14 +108,15 @@ public partial class AttestationsControl : UserControl
 
     private void CreateAttestation()
     {
-        if (attestationService is null || employeeService is null || commissionService is null) return;
-        using AttestationEditForm form = new(attestationService, employeeService, commissionService);
+        if (attestationService is null || employeeService is null || commissionService is null || criterionService is null) return;
+        using AttestationEditForm form = new(attestationService, employeeService, commissionService, criterionService);
         if (form.ShowDialog(this) == DialogResult.OK) RefreshAttestations();
     }
 
     private void OpenSelectedAttestation()
     {
-        if (attestationService is null || employeeService is null || commissionService is null) return;
+        if (attestationService is null || employeeService is null || commissionService is null
+            || criterionService is null || processService is null) return;
         AttestationListItem? selectedItem = GetSelectedAttestation();
         if (selectedItem is null)
         {
@@ -127,11 +134,22 @@ public partial class AttestationsControl : UserControl
                 return;
             }
 
+            if (attestation.Status is AttestationStatusHelper.InProgress
+                or AttestationStatusHelper.Decision
+                or AttestationStatusHelper.Completed)
+            {
+                using AttestationProcessForm processForm = new(attestationService, processService, attestation.Id);
+                processForm.ShowDialog(this);
+                RefreshAttestations();
+                return;
+            }
+
             bool readOnly = !AttestationStatusHelper.CanEdit(attestation.Status);
             using AttestationEditForm form = new(
                 attestationService,
                 employeeService,
                 commissionService,
+                criterionService,
                 attestation,
                 readOnly);
             if (form.ShowDialog(this) == DialogResult.OK) RefreshAttestations();
@@ -167,18 +185,25 @@ public partial class AttestationsControl : UserControl
         {
             attestationService.Start(attestation.Id);
             RefreshAttestations();
-            MessageBox.Show(
-                this,
-                "Аттестация переведена в статус «Проводится». Экран оценивания будет добавлен следующим этапом.",
-                "Аттестации",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            if (processService is not null)
+            {
+                using AttestationProcessForm form = new(attestationService, processService, attestation.Id);
+                form.ShowDialog(this);
+                RefreshAttestations();
+            }
         }
         catch (AttestationServiceException exception)
         {
             ShowServiceError(exception.Message);
             RefreshAttestations();
         }
+    }
+
+    private void OpenCriteriaDirectory()
+    {
+        if (criterionService is null) return;
+        using EvaluationCriteriaForm form = new(criterionService);
+        form.ShowDialog(this);
     }
 
     private void CancelSelectedAttestation()

@@ -17,6 +17,7 @@ partial class AttestationsControl
     private Panel filtersPanel = null!;
     private Label statusFilterLabel = null!;
     private ComboBox statusFilterComboBox = null!;
+    private Button criteriaButton = null!;
     private DataGridView attestationsGrid = null!;
     private DataGridViewTextBoxColumn employeeColumn = null!;
     private DataGridViewTextBoxColumn departmentColumn = null!;
@@ -46,6 +47,7 @@ partial class AttestationsControl
         filtersPanel = new Panel();
         statusFilterLabel = new Label();
         statusFilterComboBox = new ComboBox();
+        criteriaButton = new Button();
         attestationsGrid = new DataGridView();
         employeeColumn = new DataGridViewTextBoxColumn();
         departmentColumn = new DataGridViewTextBoxColumn();
@@ -120,6 +122,7 @@ partial class AttestationsControl
         filtersPanel.BackColor = AppColors.Surface;
         filtersPanel.Controls.Add(statusFilterComboBox);
         filtersPanel.Controls.Add(statusFilterLabel);
+        filtersPanel.Controls.Add(criteriaButton);
         filtersPanel.Dock = DockStyle.Fill;
         filtersPanel.Margin = new Padding(0, 0, 0, 16);
         filtersPanel.Padding = new Padding(16, 10, 16, 10);
@@ -133,6 +136,13 @@ partial class AttestationsControl
         statusFilterComboBox.Location = new Point(84, 14);
         statusFilterComboBox.Size = new Size(230, 25);
         statusFilterComboBox.SelectedIndexChanged += StatusFilterComboBox_SelectedIndexChanged;
+        criteriaButton.Dock = DockStyle.Right;
+        criteriaButton.Size = new Size(130, 42);
+        criteriaButton.Margin = new Padding(0);
+        criteriaButton.Text = "Критерии";
+        criteriaButton.Cursor = Cursors.Hand;
+        criteriaButton.FlatStyle = FlatStyle.Flat;
+        criteriaButton.Click += CriteriaButton_Click;
         attestationsGrid.AllowUserToAddRows = false;
         attestationsGrid.AllowUserToDeleteRows = false;
         attestationsGrid.AllowUserToResizeRows = false;

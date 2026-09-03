@@ -13,6 +13,9 @@ partial class AttestationEditForm
     private Label dateLabel = null!;
     private DateTimePicker attestationDatePicker = null!;
     private CheckBox evaluateManagerialCheckBox = null!;
+    private FlowLayoutPanel criteriaPanel = null!;
+    private Button selectCriteriaButton = null!;
+    private Label criteriaCountLabel = null!;
     private FlowLayoutPanel statusPanel = null!;
     private Label statusLabel = null!;
     private Label statusValueLabel = null!;
@@ -37,6 +40,9 @@ partial class AttestationEditForm
         dateLabel = new Label();
         attestationDatePicker = new DateTimePicker();
         evaluateManagerialCheckBox = new CheckBox();
+        criteriaPanel = new FlowLayoutPanel();
+        selectCriteriaButton = new Button();
+        criteriaCountLabel = new Label();
         statusPanel = new FlowLayoutPanel();
         statusLabel = new Label();
         statusValueLabel = new Label();
@@ -60,11 +66,12 @@ partial class AttestationEditForm
         formLayout.Controls.Add(dateLabel, 0, 4);
         formLayout.Controls.Add(attestationDatePicker, 0, 5);
         formLayout.Controls.Add(evaluateManagerialCheckBox, 0, 6);
-        formLayout.Controls.Add(statusPanel, 0, 7);
-        formLayout.Controls.Add(buttonsPanel, 0, 9);
+        formLayout.Controls.Add(criteriaPanel, 0, 7);
+        formLayout.Controls.Add(statusPanel, 0, 8);
+        formLayout.Controls.Add(buttonsPanel, 0, 10);
         formLayout.Dock = DockStyle.Fill;
         formLayout.Padding = new Padding(34, 28, 34, 24);
-        formLayout.RowCount = 10;
+        formLayout.RowCount = 11;
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -72,6 +79,7 @@ partial class AttestationEditForm
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 52F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
@@ -99,6 +107,27 @@ partial class AttestationEditForm
         evaluateManagerialCheckBox.TabIndex = 3;
         evaluateManagerialCheckBox.Text = "Оценивать как руководителя";
         evaluateManagerialCheckBox.UseVisualStyleBackColor = true;
+        evaluateManagerialCheckBox.CheckedChanged += EvaluateManagerialCheckBox_CheckedChanged;
+        //
+        // criteriaPanel
+        //
+        criteriaPanel.Controls.Add(selectCriteriaButton);
+        criteriaPanel.Controls.Add(criteriaCountLabel);
+        criteriaPanel.Dock = DockStyle.Fill;
+        criteriaPanel.Margin = new Padding(0);
+        criteriaPanel.WrapContents = false;
+        selectCriteriaButton.Cursor = Cursors.Hand;
+        selectCriteriaButton.FlatStyle = FlatStyle.Flat;
+        selectCriteriaButton.Margin = new Padding(0, 4, 14, 4);
+        selectCriteriaButton.Size = new Size(165, 42);
+        selectCriteriaButton.TabIndex = 4;
+        selectCriteriaButton.Text = "Выбрать критерии";
+        selectCriteriaButton.Click += SelectCriteriaButton_Click;
+        criteriaCountLabel.AutoSize = true;
+        criteriaCountLabel.Font = new Font("Segoe UI Semibold", 10F);
+        criteriaCountLabel.ForeColor = AppColors.TextSecondary;
+        criteriaCountLabel.Margin = new Padding(0, 15, 0, 0);
+        criteriaCountLabel.Text = "Выбрано: 0";
         //
         // statusPanel
         //
@@ -141,7 +170,7 @@ partial class AttestationEditForm
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = AppColors.Surface;
         CancelButton = cancelButton;
-        ClientSize = new Size(720, 510);
+        ClientSize = new Size(720, 565);
         Controls.Add(formLayout);
         Font = new Font("Segoe UI", 9F);
         FormBorderStyle = FormBorderStyle.FixedDialog;

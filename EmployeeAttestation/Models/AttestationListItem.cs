@@ -17,4 +17,8 @@ public sealed class AttestationListItem
     public string Status { get; init; } = string.Empty;
 
     public bool EvaluateManagerial { get; init; }
+
+    public double? OverallAverage { get; init; }
+
+    public string? Decision { get; init; }
 }

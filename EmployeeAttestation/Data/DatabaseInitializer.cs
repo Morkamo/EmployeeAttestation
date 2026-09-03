@@ -5,7 +5,8 @@ namespace EmployeeAttestation.Data;
 public static class DatabaseInitializer
 {
     public const string ApplicationName = "EmployeeAttestation";
-    public const string SchemaVersion = "1";
+    public const string SchemaVersion = "2";
+    private const string PreviousSchemaVersion = "1";
 
     public static void InitializeDatabase(string databasePath)
     {
@@ -172,6 +173,7 @@ public static class DatabaseInitializer
             """;
         createTableCommand.ExecuteNonQuery();
 
+        MigrateToVersion2(connection, transaction);
         WriteMetadata(connection, transaction, "application", ApplicationName);
         WriteMetadata(connection, transaction, "schema_version", SchemaVersion);
         SeedEvaluationCriteria(connection, transaction);
@@ -201,7 +203,8 @@ public static class DatabaseInitializer
             string? application = ReadMetadata(connection, "application");
             string? schemaVersion = ReadMetadata(connection, "schema_version");
             return string.Equals(application, ApplicationName, StringComparison.Ordinal)
-                && string.Equals(schemaVersion, SchemaVersion, StringComparison.Ordinal);
+                && (string.Equals(schemaVersion, SchemaVersion, StringComparison.Ordinal)
+                    || string.Equals(schemaVersion, PreviousSchemaVersion, StringComparison.Ordinal));
         }
         catch (SqliteException)
         {
@@ -255,6 +258,122 @@ public static class DatabaseInitializer
                 ('DEMANDINGNESS', 'Managerial', 'Требовательность', 2, 5, 1, 4, 1);
             """;
         command.ExecuteNonQuery();
+    }
+
+    private static void MigrateToVersion2(
+        SqliteConnection connection,
+        SqliteTransaction transaction)
+    {
+        using (SqliteCommand command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText =
+                """
+                CREATE TABLE IF NOT EXISTS attestation_criteria (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    attestation_id INTEGER NOT NULL,
+                    criterion_id INTEGER NULL,
+                    criterion_code TEXT NOT NULL,
+                    criterion_name TEXT NOT NULL,
+                    category TEXT NOT NULL,
+                    minimum_score INTEGER NOT NULL,
+                    maximum_score INTEGER NOT NULL,
+                    managers_only INTEGER NOT NULL DEFAULT 0
+                        CHECK (managers_only IN (0, 1)),
+                    sort_order INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY (attestation_id) REFERENCES attestations(id) ON DELETE RESTRICT,
+                    FOREIGN KEY (criterion_id) REFERENCES evaluation_criteria(id) ON DELETE SET NULL,
+                    UNIQUE (attestation_id, criterion_code)
+                );
+
+                CREATE TABLE IF NOT EXISTS attestation_commission_members (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    attestation_id INTEGER NOT NULL,
+                    commission_member_id INTEGER NULL,
+                    member_full_name TEXT NOT NULL,
+                    role TEXT NOT NULL,
+                    sort_order INTEGER NOT NULL DEFAULT 0,
+                    is_present INTEGER NOT NULL DEFAULT 1
+                        CHECK (is_present IN (0, 1)),
+                    FOREIGN KEY (attestation_id) REFERENCES attestations(id) ON DELETE RESTRICT,
+                    FOREIGN KEY (commission_member_id) REFERENCES commission_members(id) ON DELETE SET NULL,
+                    UNIQUE (attestation_id, commission_member_id)
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_attestation_criteria_attestation_id
+                    ON attestation_criteria(attestation_id);
+                CREATE INDEX IF NOT EXISTS idx_attestation_commission_members_attestation_id
+                    ON attestation_commission_members(attestation_id);
+                """;
+            command.ExecuteNonQuery();
+        }
+
+        AddColumnIfMissing(
+            connection,
+            transaction,
+            "attestation_scores",
+            "attestation_criterion_id",
+            "INTEGER NULL REFERENCES attestation_criteria(id) ON DELETE RESTRICT");
+        AddColumnIfMissing(
+            connection,
+            transaction,
+            "attestation_scores",
+            "attestation_commission_member_id",
+            "INTEGER NULL REFERENCES attestation_commission_members(id) ON DELETE RESTRICT");
+        AddColumnIfMissing(
+            connection,
+            transaction,
+            "attestation_votes",
+            "attestation_commission_member_id",
+            "INTEGER NULL REFERENCES attestation_commission_members(id) ON DELETE RESTRICT");
+
+        using SqliteCommand indexCommand = connection.CreateCommand();
+        indexCommand.Transaction = transaction;
+        indexCommand.CommandText =
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_attestation_scores_snapshot
+                ON attestation_scores(
+                    attestation_id,
+                    attestation_commission_member_id,
+                    attestation_criterion_id)
+                WHERE attestation_commission_member_id IS NOT NULL
+                  AND attestation_criterion_id IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_attestation_votes_snapshot
+                ON attestation_votes(attestation_id, attestation_commission_member_id)
+                WHERE attestation_commission_member_id IS NOT NULL;
+            CREATE INDEX IF NOT EXISTS idx_attestation_scores_attestation_criterion_id
+                ON attestation_scores(attestation_criterion_id);
+            CREATE INDEX IF NOT EXISTS idx_attestation_votes_snapshot_member_id
+                ON attestation_votes(attestation_commission_member_id);
+            """;
+        indexCommand.ExecuteNonQuery();
+    }
+
+    private static void AddColumnIfMissing(
+        SqliteConnection connection,
+        SqliteTransaction transaction,
+        string tableName,
+        string columnName,
+        string definition)
+    {
+        using (SqliteCommand checkCommand = connection.CreateCommand())
+        {
+            checkCommand.Transaction = transaction;
+            checkCommand.CommandText = $"PRAGMA table_info({tableName});";
+            using SqliteDataReader reader = checkCommand.ExecuteReader();
+            while (reader.Read())
+            {
+                if (string.Equals(reader.GetString(1), columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+            }
+        }
+
+        using SqliteCommand alterCommand = connection.CreateCommand();
+        alterCommand.Transaction = transaction;
+        alterCommand.CommandText = $"ALTER TABLE {tableName} ADD COLUMN {columnName} {definition};";
+        alterCommand.ExecuteNonQuery();
     }
 
     private static void WriteMetadata(
