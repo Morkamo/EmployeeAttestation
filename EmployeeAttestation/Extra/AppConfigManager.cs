@@ -10,7 +10,7 @@ public sealed class AppConfigManager
 
     public AppConfigManager()
     {
-        ConfigPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        ConfigPath = AppDataPaths.ConfigPath;
         config = LoadConfig();
     }
 
@@ -45,13 +45,27 @@ public sealed class AppConfigManager
 
     private AppConfig LoadConfig()
     {
+        EnsureApplicationDataDirectory();
+
         if (!File.Exists(ConfigPath))
         {
+            TryMigrateLegacyConfig();
+
+            if (File.Exists(ConfigPath))
+            {
+                return LoadConfigFromFile();
+            }
+
             AppConfig defaultConfig = CreateDefaultConfig();
             SaveConfig(defaultConfig);
             return defaultConfig;
         }
 
+        return LoadConfigFromFile();
+    }
+
+    private AppConfig LoadConfigFromFile()
+    {
         try
         {
             string json = File.ReadAllText(ConfigPath);
@@ -88,6 +102,7 @@ public sealed class AppConfigManager
     {
         try
         {
+            EnsureApplicationDataDirectory();
             string json = JsonSerializer.Serialize(configToSave, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(ConfigPath, json);
         }
@@ -102,6 +117,33 @@ public sealed class AppConfigManager
     }
 
     private static AppConfig CreateDefaultConfig() => new() { SelectedDatabase = DefaultDatabaseFileName };
+
+    private static void EnsureApplicationDataDirectory()
+    {
+        Directory.CreateDirectory(AppDataPaths.ApplicationDataDirectory);
+    }
+
+    private void TryMigrateLegacyConfig()
+    {
+        string legacyConfigPath = Path.Combine(AppContext.BaseDirectory, "config.json");
+        if (!File.Exists(legacyConfigPath))
+        {
+            return;
+        }
+
+        try
+        {
+            File.Copy(legacyConfigPath, ConfigPath, overwrite: false);
+        }
+        catch (IOException)
+        {
+            // Ignore migration failures and fall back to defaults.
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Ignore migration failures and fall back to defaults.
+        }
+    }
 
     private sealed class AppConfig
     {

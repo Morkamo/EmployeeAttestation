@@ -13,7 +13,7 @@ public sealed class DatabaseManager
     public DatabaseManager(AppConfigManager configManager)
     {
         this.configManager = configManager ?? throw new ArgumentNullException(nameof(configManager));
-        DatabasesDirectory = Path.Combine(AppContext.BaseDirectory, "databases");
+        DatabasesDirectory = AppDataPaths.DatabasesDirectory;
         selectedDatabaseFileName = NormalizeDatabaseFileName(configManager.GetSelectedDatabase())
             ?? DefaultDatabaseFileName;
     }
@@ -35,7 +35,7 @@ public sealed class DatabaseManager
 
     public IReadOnlyList<string> GetAvailableDatabases()
     {
-        Directory.CreateDirectory(DatabasesDirectory);
+        EnsureDatabasesDirectory();
 
         try
         {
@@ -62,7 +62,7 @@ public sealed class DatabaseManager
     {
         lock (syncRoot)
         {
-            Directory.CreateDirectory(DatabasesDirectory);
+            EnsureDatabasesDirectory();
             string selectedPath = GetDatabasePath(selectedDatabaseFileName);
             if (DatabaseInitializer.IsEmployeeAttestationDatabase(selectedPath))
             {
@@ -141,6 +141,41 @@ public sealed class DatabaseManager
     {
         selectedDatabaseFileName = databaseFileName;
         configManager.SetSelectedDatabase(databaseFileName);
+    }
+
+    private void EnsureDatabasesDirectory()
+    {
+        Directory.CreateDirectory(DatabasesDirectory);
+        CopySeedDatabasesIfNeeded();
+    }
+
+    private void CopySeedDatabasesIfNeeded()
+    {
+        try
+        {
+            bool hasUserDatabases = Directory.EnumerateFiles(DatabasesDirectory, "*.db", SearchOption.TopDirectoryOnly).Any();
+            if (hasUserDatabases || !Directory.Exists(AppDataPaths.InstallDatabasesDirectory))
+            {
+                return;
+            }
+
+            foreach (string sourcePath in Directory.EnumerateFiles(AppDataPaths.InstallDatabasesDirectory, "*.db", SearchOption.TopDirectoryOnly))
+            {
+                string destinationPath = Path.Combine(DatabasesDirectory, Path.GetFileName(sourcePath));
+                if (!File.Exists(destinationPath))
+                {
+                    File.Copy(sourcePath, destinationPath, overwrite: false);
+                }
+            }
+        }
+        catch (IOException)
+        {
+            // If copying seed databases fails, the app can still create a new empty database.
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // If copying seed databases fails, the app can still create a new empty database.
+        }
     }
 
     private string GetAvailableDefaultDatabaseFileName()
