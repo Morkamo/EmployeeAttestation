@@ -32,11 +32,11 @@ partial class CommissionMemberEditForm
         formLayout.RowCount = 8; formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         ConfigureField(lastNameLabel, lastNameTextBox, "Фамилия", 0); ConfigureField(firstNameLabel, firstNameTextBox, "Имя", 1);
         ConfigureField(middleNameLabel, middleNameTextBox, "Отчество", 2);
-        buttonsPanel.Controls.Add(cancelButton); buttonsPanel.Controls.Add(saveButton); buttonsPanel.Dock = DockStyle.Fill;
-        buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.Margin = new Padding(0); buttonsPanel.WrapContents = false;
+        buttonsPanel.Controls.Add(cancelButton); buttonsPanel.Controls.Add(saveButton); buttonsPanel.AutoSize = true; buttonsPanel.Dock = DockStyle.Top;
+        buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.Margin = new Padding(0); buttonsPanel.WrapContents = true;
         ConfigureButton(saveButton, "Сохранить", 3); saveButton.Click += SaveButton_Click;
         ConfigureButton(cancelButton, "Отмена", 4); cancelButton.DialogResult = DialogResult.Cancel;
         AcceptButton = saveButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font;
@@ -55,7 +55,7 @@ partial class CommissionMemberEditForm
 
     private static void ConfigureButton(Button button, string text, int tabIndex)
     {
-        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0);
-        button.Size = new Size(130, 44); button.TabIndex = tabIndex; button.Text = text; button.UseVisualStyleBackColor = false;
+        button.AutoSize = true; button.AutoSizeMode = AutoSizeMode.GrowAndShrink; button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0);
+        button.MinimumSize = new Size(130, 44); button.Padding = new Padding(16, 0, 16, 0); button.TabIndex = tabIndex; button.Text = text; button.UseVisualStyleBackColor = false;
     }
 }

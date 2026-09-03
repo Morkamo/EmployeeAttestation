@@ -27,15 +27,15 @@ partial class CommissionEditForm
         formLayout.Controls.Add(buttonsPanel, 0, 5); formLayout.Dock = DockStyle.Fill; formLayout.Padding = new Padding(30, 26, 30, 24);
         formLayout.RowCount = 6; formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 145F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         ConfigureLabel(nameLabel, "Наименование"); ConfigureLabel(descriptionLabel, "Описание");
         nameTextBox.BorderStyle = BorderStyle.FixedSingle; nameTextBox.Dock = DockStyle.Top; nameTextBox.Font = new Font("Segoe UI", 11F);
         nameTextBox.Margin = new Padding(0, 0, 0, 18); nameTextBox.TabIndex = 0;
         descriptionTextBox.BorderStyle = BorderStyle.FixedSingle; descriptionTextBox.Dock = DockStyle.Fill;
         descriptionTextBox.Font = new Font("Segoe UI", 10F); descriptionTextBox.Margin = new Padding(0, 0, 0, 18);
         descriptionTextBox.Multiline = true; descriptionTextBox.ScrollBars = ScrollBars.Vertical; descriptionTextBox.TabIndex = 1;
-        buttonsPanel.Controls.Add(cancelButton); buttonsPanel.Controls.Add(saveButton); buttonsPanel.Dock = DockStyle.Fill;
-        buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.Margin = new Padding(0); buttonsPanel.WrapContents = false;
+        buttonsPanel.Controls.Add(cancelButton); buttonsPanel.Controls.Add(saveButton); buttonsPanel.AutoSize = true; buttonsPanel.Dock = DockStyle.Top;
+        buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.Margin = new Padding(0); buttonsPanel.WrapContents = true;
         ConfigureButton(saveButton, "Сохранить", 2); saveButton.Click += SaveButton_Click;
         ConfigureButton(cancelButton, "Отмена", 3); cancelButton.DialogResult = DialogResult.Cancel;
         AcceptButton = saveButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font;
@@ -53,7 +53,7 @@ partial class CommissionEditForm
 
     private static void ConfigureButton(Button button, string text, int tabIndex)
     {
-        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0);
-        button.Size = new Size(130, 44); button.TabIndex = tabIndex; button.Text = text; button.UseVisualStyleBackColor = false;
+        button.AutoSize = true; button.AutoSizeMode = AutoSizeMode.GrowAndShrink; button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0);
+        button.MinimumSize = new Size(130, 44); button.Padding = new Padding(16, 0, 16, 0); button.TabIndex = tabIndex; button.Text = text; button.UseVisualStyleBackColor = false;
     }
 }

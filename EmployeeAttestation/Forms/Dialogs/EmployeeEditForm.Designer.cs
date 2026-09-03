@@ -77,9 +77,9 @@ partial class EmployeeEditForm
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         // 
         // labels and fields
         // 
@@ -109,10 +109,11 @@ partial class EmployeeEditForm
         // 
         buttonsPanel.Controls.Add(cancelButton);
         buttonsPanel.Controls.Add(saveButton);
-        buttonsPanel.Dock = DockStyle.Fill;
+        buttonsPanel.AutoSize = true;
+        buttonsPanel.Dock = DockStyle.Top;
         buttonsPanel.FlowDirection = FlowDirection.RightToLeft;
         buttonsPanel.Margin = new Padding(0);
-        buttonsPanel.WrapContents = false;
+        buttonsPanel.WrapContents = true;
         ConfigureDialogButton(saveButton, "Сохранить", 6);
         saveButton.Click += SaveButton_Click;
         ConfigureDialogButton(cancelButton, "Отмена", 7);
@@ -125,7 +126,7 @@ partial class EmployeeEditForm
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = AppColors.Surface;
         CancelButton = cancelButton;
-        ClientSize = new Size(700, 580);
+        ClientSize = new Size(720, 620);
         Controls.Add(formLayout);
         Font = new Font("Segoe UI", 9F);
         FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -171,10 +172,13 @@ partial class EmployeeEditForm
 
     private static void ConfigureDialogButton(Button button, string text, int tabIndex)
     {
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         button.Cursor = Cursors.Hand;
         button.FlatStyle = FlatStyle.Flat;
         button.Margin = new Padding(10, 0, 0, 0);
-        button.Size = new Size(130, 44);
+        button.MinimumSize = new Size(130, 44);
+        button.Padding = new Padding(16, 0, 16, 0);
         button.TabIndex = tabIndex;
         button.Text = text;
         button.UseVisualStyleBackColor = false;

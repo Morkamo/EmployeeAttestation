@@ -78,11 +78,11 @@ partial class AttestationEditForm
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 52F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         //
         // fields
         //
@@ -113,13 +113,17 @@ partial class AttestationEditForm
         //
         criteriaPanel.Controls.Add(selectCriteriaButton);
         criteriaPanel.Controls.Add(criteriaCountLabel);
-        criteriaPanel.Dock = DockStyle.Fill;
+        criteriaPanel.AutoSize = true;
+        criteriaPanel.Dock = DockStyle.Top;
         criteriaPanel.Margin = new Padding(0);
-        criteriaPanel.WrapContents = false;
+        criteriaPanel.WrapContents = true;
         selectCriteriaButton.Cursor = Cursors.Hand;
         selectCriteriaButton.FlatStyle = FlatStyle.Flat;
         selectCriteriaButton.Margin = new Padding(0, 4, 14, 4);
-        selectCriteriaButton.Size = new Size(165, 42);
+        selectCriteriaButton.AutoSize = true;
+        selectCriteriaButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        selectCriteriaButton.MinimumSize = new Size(165, 42);
+        selectCriteriaButton.Padding = new Padding(16, 0, 16, 0);
         selectCriteriaButton.TabIndex = 4;
         selectCriteriaButton.Text = "Выбрать критерии";
         selectCriteriaButton.Click += SelectCriteriaButton_Click;
@@ -133,9 +137,10 @@ partial class AttestationEditForm
         //
         statusPanel.Controls.Add(statusLabel);
         statusPanel.Controls.Add(statusValueLabel);
-        statusPanel.Dock = DockStyle.Fill;
+        statusPanel.AutoSize = true;
+        statusPanel.Dock = DockStyle.Top;
         statusPanel.Margin = new Padding(0);
-        statusPanel.WrapContents = false;
+        statusPanel.WrapContents = true;
         statusLabel.AutoSize = true;
         statusLabel.Font = new Font("Segoe UI Semibold", 10F);
         statusLabel.ForeColor = AppColors.TextSecondary;
@@ -152,10 +157,11 @@ partial class AttestationEditForm
         buttonsPanel.Controls.Add(cancelButton);
         buttonsPanel.Controls.Add(scheduleButton);
         buttonsPanel.Controls.Add(saveDraftButton);
-        buttonsPanel.Dock = DockStyle.Fill;
+        buttonsPanel.AutoSize = true;
+        buttonsPanel.Dock = DockStyle.Top;
         buttonsPanel.FlowDirection = FlowDirection.RightToLeft;
         buttonsPanel.Margin = new Padding(0);
-        buttonsPanel.WrapContents = false;
+        buttonsPanel.WrapContents = true;
         ConfigureDialogButton(saveDraftButton, "Сохранить черновик", 4, 178);
         saveDraftButton.Click += SaveDraftButton_Click;
         ConfigureDialogButton(scheduleButton, "Запланировать", 5, 150);
@@ -170,7 +176,7 @@ partial class AttestationEditForm
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = AppColors.Surface;
         CancelButton = cancelButton;
-        ClientSize = new Size(720, 565);
+        ClientSize = new Size(760, 610);
         Controls.Add(formLayout);
         Font = new Font("Segoe UI", 9F);
         FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -209,10 +215,13 @@ partial class AttestationEditForm
 
     private static void ConfigureDialogButton(Button button, string text, int tabIndex, int width)
     {
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         button.Cursor = Cursors.Hand;
         button.FlatStyle = FlatStyle.Flat;
         button.Margin = new Padding(10, 0, 0, 0);
-        button.Size = new Size(width, 44);
+        button.MinimumSize = new Size(width, 44);
+        button.Padding = new Padding(16, 0, 16, 0);
         button.TabIndex = tabIndex;
         button.Text = text;
         button.UseVisualStyleBackColor = false;

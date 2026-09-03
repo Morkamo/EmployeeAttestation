@@ -28,6 +28,13 @@ public static class AppControlStyles
         grid.RowTemplate.Height = 46;
     }
 
+    public static void ApplyReadableGrid(DataGridView grid)
+    {
+        grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+        grid.ScrollBars = ScrollBars.Both;
+    }
+
     public static void ApplyPrimaryButton(Button button)
     {
         button.BackColor = AppColors.Primary;
@@ -48,5 +55,13 @@ public static class AppControlStyles
         button.FlatAppearance.BorderSize = 1;
         button.Font = new Font("Segoe UI Semibold", 10F);
         button.UseVisualStyleBackColor = false;
+    }
+
+    public static void ApplyAutoSizeButton(Button button, int minimumWidth = 0)
+    {
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        button.MinimumSize = new Size(minimumWidth, 42);
+        button.Padding = new Padding(16, 0, 16, 0);
     }
 }

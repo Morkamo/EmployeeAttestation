@@ -31,30 +31,31 @@ partial class MainForm
         sidebarControl.Location = new Point(0, 0);
         sidebarControl.Margin = new Padding(0);
         sidebarControl.Name = "sidebarControl";
-        sidebarControl.Size = new Size(483, 1369);
+        sidebarControl.Size = new Size(260, 900);
         sidebarControl.TabIndex = 0;
         // 
         // contentPanel
         // 
+        contentPanel.AutoScroll = true;
         contentPanel.BackColor = Color.FromArgb(247, 249, 252);
         contentPanel.Dock = DockStyle.Fill;
-        contentPanel.Location = new Point(483, 0);
+        contentPanel.Location = new Point(260, 0);
         contentPanel.Margin = new Padding(0);
         contentPanel.Name = "contentPanel";
-        contentPanel.Size = new Size(2051, 1369);
+        contentPanel.Size = new Size(1340, 900);
         contentPanel.TabIndex = 1;
         // 
         // MainForm
         // 
-        AutoScaleDimensions = new SizeF(13F, 32F);
+        AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = Color.FromArgb(247, 249, 252);
-        ClientSize = new Size(2534, 1369);
+        ClientSize = new Size(1600, 900);
         Controls.Add(contentPanel);
         Controls.Add(sidebarControl);
         Font = new Font("Segoe UI", 9F);
-        Margin = new Padding(6);
-        MinimumSize = new Size(1280, 720);
+        Margin = new Padding(3);
+        MinimumSize = new Size(800, 450);
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Аттестация";

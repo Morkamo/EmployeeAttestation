@@ -64,7 +64,7 @@ partial class DepartmentEditForm
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         formLayout.Size = new Size(600, 400);
         formLayout.TabIndex = 0;
         // 
@@ -96,14 +96,15 @@ partial class DepartmentEditForm
         // 
         buttonsPanel.Controls.Add(cancelButton);
         buttonsPanel.Controls.Add(saveButton);
-        buttonsPanel.Dock = DockStyle.Fill;
+        buttonsPanel.AutoSize = true;
+        buttonsPanel.Dock = DockStyle.Top;
         buttonsPanel.FlowDirection = FlowDirection.RightToLeft;
         buttonsPanel.Location = new Point(30, 328);
         buttonsPanel.Margin = new Padding(0);
         buttonsPanel.Name = "buttonsPanel";
         buttonsPanel.Size = new Size(540, 48);
         buttonsPanel.TabIndex = 3;
-        buttonsPanel.WrapContents = false;
+        buttonsPanel.WrapContents = true;
         // 
         // saveButton
         // 
@@ -159,10 +160,13 @@ partial class DepartmentEditForm
 
     private static void ConfigureDialogButton(Button button, string text, int tabIndex)
     {
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         button.Cursor = Cursors.Hand;
         button.FlatStyle = FlatStyle.Flat;
         button.Margin = new Padding(10, 0, 0, 0);
-        button.Size = new Size(130, 44);
+        button.MinimumSize = new Size(130, 44);
+        button.Padding = new Padding(16, 0, 16, 0);
         button.TabIndex = tabIndex;
         button.Text = text;
         button.UseVisualStyleBackColor = false;

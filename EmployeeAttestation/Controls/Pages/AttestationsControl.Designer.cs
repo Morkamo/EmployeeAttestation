@@ -73,8 +73,8 @@ partial class AttestationsControl
         pageLayout.RowCount = 5;
         pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 92F));
-        pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 66F));
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 102F));
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 76F));
         pageLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         titleLabel.AutoSize = true;
         titleLabel.Font = new Font("Segoe UI Semibold", 26F, FontStyle.Bold);
@@ -86,17 +86,18 @@ partial class AttestationsControl
         subtitleLabel.ForeColor = AppColors.TextSecondary;
         subtitleLabel.Margin = new Padding(2, 0, 0, 30);
         subtitleLabel.Text = "Планирование и управление жизненным циклом аттестаций сотрудников.";
+        toolbarLayout.AutoScroll = true;
         toolbarLayout.BackColor = AppColors.Surface;
         toolbarLayout.ColumnCount = 9;
         toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 12F));
-        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 190F));
+        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220F));
         toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 116F));
+        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
         toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 176F));
+        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
         toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+        toolbarLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
         toolbarLayout.Controls.Add(searchTextBox, 0, 0);
         toolbarLayout.Controls.Add(createButton, 2, 0);
         toolbarLayout.Controls.Add(openButton, 4, 0);
@@ -104,6 +105,7 @@ partial class AttestationsControl
         toolbarLayout.Controls.Add(cancelAttestationButton, 8, 0);
         toolbarLayout.Dock = DockStyle.Fill;
         toolbarLayout.Margin = new Padding(0, 0, 0, 16);
+        toolbarLayout.MinimumSize = new Size(850, 0);
         toolbarLayout.Padding = new Padding(16);
         searchTextBox.BorderStyle = BorderStyle.FixedSingle;
         searchTextBox.Dock = DockStyle.Fill;
@@ -119,6 +121,7 @@ partial class AttestationsControl
         startButton.Click += StartButton_Click;
         ConfigureToolbarButton(cancelAttestationButton, "Отменить");
         cancelAttestationButton.Click += CancelAttestationButton_Click;
+        filtersPanel.AutoScroll = true;
         filtersPanel.BackColor = AppColors.Surface;
         filtersPanel.Controls.Add(statusFilterComboBox);
         filtersPanel.Controls.Add(statusFilterLabel);
@@ -137,8 +140,11 @@ partial class AttestationsControl
         statusFilterComboBox.Size = new Size(230, 25);
         statusFilterComboBox.SelectedIndexChanged += StatusFilterComboBox_SelectedIndexChanged;
         criteriaButton.Dock = DockStyle.Right;
-        criteriaButton.Size = new Size(130, 42);
+        criteriaButton.AutoSize = true;
+        criteriaButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        criteriaButton.MinimumSize = new Size(130, 42);
         criteriaButton.Margin = new Padding(0);
+        criteriaButton.Padding = new Padding(16, 0, 16, 0);
         criteriaButton.Text = "Критерии";
         criteriaButton.Cursor = Cursors.Hand;
         criteriaButton.FlatStyle = FlatStyle.Flat;
@@ -154,15 +160,16 @@ partial class AttestationsControl
         attestationsGrid.ReadOnly = true;
         attestationsGrid.RowHeadersVisible = false;
         attestationsGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        attestationsGrid.ScrollBars = ScrollBars.Both;
         attestationsGrid.SelectionChanged += AttestationsGrid_SelectionChanged;
         attestationsGrid.CellDoubleClick += AttestationsGrid_CellDoubleClick;
-        ConfigureGridColumn(employeeColumn, "Сотрудник", "employeeColumn", 130F);
-        ConfigureGridColumn(departmentColumn, "Подразделение", "departmentColumn", 105F);
-        ConfigureGridColumn(positionColumn, "Должность", "positionColumn", 105F);
-        ConfigureGridColumn(dateColumn, "Дата", "dateColumn", 65F);
-        ConfigureGridColumn(commissionColumn, "Комиссия", "commissionColumn", 120F);
-        ConfigureGridColumn(statusColumn, "Статус", "statusColumn", 85F);
-        ConfigureGridColumn(managerialColumn, "Руководитель", "managerialColumn", 65F);
+        ConfigureGridColumn(employeeColumn, "Сотрудник", "employeeColumn", 210);
+        ConfigureGridColumn(departmentColumn, "Подразделение", "departmentColumn", 190);
+        ConfigureGridColumn(positionColumn, "Должность", "positionColumn", 190);
+        ConfigureGridColumn(dateColumn, "Дата", "dateColumn", 120);
+        ConfigureGridColumn(commissionColumn, "Комиссия", "commissionColumn", 220);
+        ConfigureGridColumn(statusColumn, "Статус", "statusColumn", 150);
+        ConfigureGridColumn(managerialColumn, "Руководитель", "managerialColumn", 145);
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         BackColor = AppColors.Background;
@@ -182,10 +189,14 @@ partial class AttestationsControl
 
     private static void ConfigureToolbarButton(Button button, string text)
     {
+        button.AutoSize = true;
+        button.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         button.Cursor = Cursors.Hand;
         button.Dock = DockStyle.Fill;
         button.FlatStyle = FlatStyle.Flat;
         button.Margin = new Padding(0);
+        button.MinimumSize = new Size(110, 42);
+        button.Padding = new Padding(14, 0, 14, 0);
         button.Text = text;
         button.UseVisualStyleBackColor = false;
     }
@@ -194,10 +205,11 @@ partial class AttestationsControl
         DataGridViewTextBoxColumn column,
         string headerText,
         string name,
-        float fillWeight)
+        int width)
     {
         column.HeaderText = headerText;
         column.Name = name;
-        column.FillWeight = fillWeight;
+        column.FillWeight = width;
+        column.MinimumWidth = Math.Min(width, 180);
     }
 }

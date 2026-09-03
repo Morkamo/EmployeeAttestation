@@ -16,7 +16,7 @@ partial class AttestationCriteriaSelectForm
         saveButton = new Button(); cancelButton = new Button(); SuspendLayout();
         layout.ColumnCount = 1; layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); layout.Dock = DockStyle.Fill;
         layout.Padding = new Padding(28, 24, 28, 22); layout.RowCount = 5;
-        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F)); layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
         titleLabel.AutoSize = true; titleLabel.Font = new Font("Segoe UI Semibold", 20F); titleLabel.ForeColor = AppColors.TextPrimary;
@@ -26,11 +26,12 @@ partial class AttestationCriteriaSelectForm
         criteriaGrid.AllowUserToAddRows = false; criteriaGrid.AllowUserToDeleteRows = false; criteriaGrid.AllowUserToResizeRows = false;
         criteriaGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; criteriaGrid.Dock = DockStyle.Fill;
         criteriaGrid.RowHeadersVisible = false; criteriaGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        criteriaGrid.Columns.AddRange(new DataGridViewCheckBoxColumn { Name = "selected", HeaderText = "Выбрать", FillWeight = 45F },
-            new DataGridViewTextBoxColumn { Name = "name", HeaderText = "Наименование", FillWeight = 170F, ReadOnly = true },
-            new DataGridViewTextBoxColumn { Name = "category", HeaderText = "Категория", FillWeight = 90F, ReadOnly = true },
-            new DataGridViewTextBoxColumn { Name = "range", HeaderText = "Баллы", FillWeight = 45F, ReadOnly = true },
-            new DataGridViewTextBoxColumn { Name = "status", HeaderText = "Статус", FillWeight = 55F, ReadOnly = true });
+        criteriaGrid.ScrollBars = ScrollBars.Both;
+        criteriaGrid.Columns.AddRange(new DataGridViewCheckBoxColumn { Name = "selected", HeaderText = "Выбрать", FillWeight = 50F, MinimumWidth = 80 },
+            new DataGridViewTextBoxColumn { Name = "name", HeaderText = "Наименование", FillWeight = 180F, MinimumWidth = 260, ReadOnly = true },
+            new DataGridViewTextBoxColumn { Name = "category", HeaderText = "Категория", FillWeight = 90F, MinimumWidth = 140, ReadOnly = true },
+            new DataGridViewTextBoxColumn { Name = "range", HeaderText = "Баллы", FillWeight = 50F, MinimumWidth = 80, ReadOnly = true },
+            new DataGridViewTextBoxColumn { Name = "status", HeaderText = "Статус", FillWeight = 70F, MinimumWidth = 110, ReadOnly = true });
         layout.Controls.Add(criteriaGrid, 0, 2);
         actionsPanel.Dock = DockStyle.Fill; actionsPanel.Controls.Add(selectAllButton); actionsPanel.Controls.Add(clearAllButton);
         ConfigureButton(selectAllButton, "Выбрать все", 130); selectAllButton.Click += SelectAllButton_Click;
@@ -38,9 +39,9 @@ partial class AttestationCriteriaSelectForm
         footer.Dock = DockStyle.Fill; footer.FlowDirection = FlowDirection.RightToLeft; footer.Controls.Add(cancelButton); footer.Controls.Add(saveButton);
         ConfigureButton(saveButton, "Сохранить", 130); saveButton.Click += SaveButton_Click;
         ConfigureButton(cancelButton, "Отмена", 120); cancelButton.DialogResult = DialogResult.Cancel; layout.Controls.Add(footer, 0, 4);
-        AcceptButton = saveButton; CancelButton = cancelButton; AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background;
-        ClientSize = new Size(900, 650); Controls.Add(layout); MinimumSize = new Size(760, 520); Name = "AttestationCriteriaSelectForm";
+        AcceptButton = saveButton; CancelButton = cancelButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background;
+        ClientSize = new Size(900, 650); Controls.Add(layout); MinimumSize = new Size(640, 420); Name = "AttestationCriteriaSelectForm";
         StartPosition = FormStartPosition.CenterParent; Text = "Выбор критериев"; ResumeLayout(false);
     }
-    private static void ConfigureButton(Button button, string text, int width) { button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 4, 10, 4); button.Size = new Size(width, 42); button.Text = text; }
+    private static void ConfigureButton(Button button, string text, int width) { button.AutoSize = true; button.AutoSizeMode = AutoSizeMode.GrowAndShrink; button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 4, 10, 4); button.MinimumSize = new Size(width, 42); button.Padding = new Padding(16, 0, 16, 0); button.Text = text; }
 }

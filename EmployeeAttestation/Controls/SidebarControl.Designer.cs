@@ -6,6 +6,7 @@ namespace EmployeeAttestation.Controls;
 partial class SidebarControl
 {
     private System.ComponentModel.IContainer components = null!;
+    private Panel navigationScrollPanel = null!;
     private TableLayoutPanel navigationPanel = null!;
     private Label sectionTitleLabel = null!;
     private Panel separatorPanel = null!;
@@ -30,6 +31,7 @@ partial class SidebarControl
     private void InitializeComponent()
     {
         navigationPanel = new TableLayoutPanel();
+        navigationScrollPanel = new Panel();
         separatorPanel = new Panel();
         sectionTitleLabel = new Label();
         homeButton = CreateNavigationButton(PageType.Home);
@@ -43,13 +45,15 @@ partial class SidebarControl
         // 
         // navigationPanel
         // 
-        navigationPanel.Dock = DockStyle.Fill;
+        navigationPanel.AutoSize = true;
+        navigationPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        navigationPanel.Dock = DockStyle.Top;
         navigationPanel.ColumnCount = 1;
         navigationPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         navigationPanel.Location = new Point(0, 76);
         navigationPanel.Name = "navigationPanel";
         navigationPanel.Padding = new Padding(12, 10, 12, 10);
-        navigationPanel.RowCount = 8;
+        navigationPanel.RowCount = 7;
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
@@ -57,7 +61,6 @@ partial class SidebarControl
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         navigationPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
-        navigationPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         navigationPanel.Size = new Size(259, 824);
         navigationPanel.TabIndex = 1;
         navigationPanel.Controls.Add(homeButton, 0, 0);
@@ -67,6 +70,16 @@ partial class SidebarControl
         navigationPanel.Controls.Add(departmentsButton, 0, 4);
         navigationPanel.Controls.Add(positionsButton, 0, 5);
         navigationPanel.Controls.Add(settingsButton, 0, 6);
+        // 
+        // navigationScrollPanel
+        // 
+        navigationScrollPanel.AutoScroll = true;
+        navigationScrollPanel.Controls.Add(navigationPanel);
+        navigationScrollPanel.Dock = DockStyle.Fill;
+        navigationScrollPanel.Location = new Point(0, 76);
+        navigationScrollPanel.Name = "navigationScrollPanel";
+        navigationScrollPanel.Size = new Size(259, 824);
+        navigationScrollPanel.TabIndex = 1;
         // 
         // homeButton
         // 
@@ -121,7 +134,7 @@ partial class SidebarControl
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        Controls.Add(navigationPanel);
+        Controls.Add(navigationScrollPanel);
         Controls.Add(sectionTitleLabel);
         Controls.Add(separatorPanel);
         Font = new Font("Segoe UI", 10F);

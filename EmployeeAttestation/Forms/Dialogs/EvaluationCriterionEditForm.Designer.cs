@@ -37,8 +37,8 @@ partial class EvaluationCriterionEditForm
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
         formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 56F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F)); formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        formLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); formLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        formLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         AddLabel(formLayout, "Наименование", 0, 0, 2);
         ConfigureTextBox(nameTextBox); formLayout.Controls.Add(nameTextBox, 0, 1); formLayout.SetColumnSpan(nameTextBox, 2);
         AddLabel(formLayout, "Категория", 0, 2, 1); AddLabel(formLayout, "Порядок", 1, 2, 1);
@@ -51,12 +51,12 @@ partial class EvaluationCriterionEditForm
         managersOnlyCheckBox.ForeColor = AppColors.TextPrimary; managersOnlyCheckBox.Margin = new Padding(0, 8, 0, 0);
         managersOnlyCheckBox.Text = "Только для руководителей"; formLayout.Controls.Add(managersOnlyCheckBox, 0, 6);
         formLayout.SetColumnSpan(managersOnlyCheckBox, 2);
-        buttonsPanel.Dock = DockStyle.Fill; buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.WrapContents = false;
+        buttonsPanel.AutoSize = true; buttonsPanel.Dock = DockStyle.Top; buttonsPanel.FlowDirection = FlowDirection.RightToLeft; buttonsPanel.WrapContents = true;
         buttonsPanel.Controls.Add(cancelButton); buttonsPanel.Controls.Add(saveButton); formLayout.Controls.Add(buttonsPanel, 0, 8);
         formLayout.SetColumnSpan(buttonsPanel, 2);
         ConfigureButton(saveButton, "Сохранить", 130); saveButton.Click += SaveButton_Click;
         ConfigureButton(cancelButton, "Отмена", 120); cancelButton.DialogResult = DialogResult.Cancel;
-        AcceptButton = saveButton; CancelButton = cancelButton; AutoScaleMode = AutoScaleMode.Font;
+        AcceptButton = saveButton; CancelButton = cancelButton; AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font;
         BackColor = AppColors.Surface; ClientSize = new Size(660, 440); Controls.Add(formLayout);
         FormBorderStyle = FormBorderStyle.FixedDialog; MaximizeBox = false; MinimizeBox = false;
         Name = "EvaluationCriterionEditForm"; ShowInTaskbar = false; StartPosition = FormStartPosition.CenterParent;
@@ -76,5 +76,5 @@ partial class EvaluationCriterionEditForm
     private static void ConfigureTextBox(TextBox control) { control.BorderStyle = BorderStyle.FixedSingle; control.Dock = DockStyle.Top; control.Font = new Font("Segoe UI", 11F); control.Margin = new Padding(0, 0, 10, 16); }
     private static void ConfigureComboBox(ComboBox control) { control.Dock = DockStyle.Top; control.DropDownStyle = ComboBoxStyle.DropDownList; control.Font = new Font("Segoe UI", 11F); control.Margin = new Padding(0, 0, 10, 16); }
     private static void ConfigureNumeric(NumericUpDown control, int min, int max) { control.Dock = DockStyle.Top; control.Font = new Font("Segoe UI", 11F); control.Minimum = min; control.Maximum = max; control.Margin = new Padding(0, 0, 10, 16); }
-    private static void ConfigureButton(Button button, string text, int width) { button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0); button.Size = new Size(width, 44); button.Text = text; }
+    private static void ConfigureButton(Button button, string text, int width) { button.AutoSize = true; button.AutoSizeMode = AutoSizeMode.GrowAndShrink; button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(10, 0, 0, 0); button.MinimumSize = new Size(width, 44); button.Padding = new Padding(16, 0, 16, 0); button.Text = text; }
 }

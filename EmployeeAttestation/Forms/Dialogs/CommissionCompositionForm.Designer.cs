@@ -36,19 +36,19 @@ partial class CommissionCompositionForm
         pageLayout.ColumnCount = 1; pageLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         pageLayout.Controls.Add(titleLabel, 0, 0); pageLayout.Controls.Add(commissionNameLabel, 0, 1); pageLayout.Controls.Add(compositionGrid, 0, 2);
         pageLayout.Controls.Add(editorLayout, 0, 3); pageLayout.Controls.Add(actionsPanel, 0, 4); pageLayout.Controls.Add(footerPanel, 0, 5);
-        pageLayout.Dock = DockStyle.Fill; pageLayout.Padding = new Padding(28); pageLayout.RowCount = 6;
+        pageLayout.Dock = DockStyle.Fill; pageLayout.Padding = new Padding(22); pageLayout.RowCount = 6;
         pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        pageLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 82F));
-        pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F)); pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        pageLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); pageLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
         titleLabel.AutoSize = true; titleLabel.Font = new Font("Segoe UI Semibold", 20F, FontStyle.Bold); titleLabel.ForeColor = AppColors.TextPrimary;
         titleLabel.Margin = new Padding(0, 0, 0, 4); titleLabel.Text = "Состав комиссии";
         commissionNameLabel.AutoSize = true; commissionNameLabel.Font = new Font("Segoe UI", 11F); commissionNameLabel.ForeColor = AppColors.TextSecondary;
-        commissionNameLabel.Margin = new Padding(0, 0, 0, 18); commissionNameLabel.Text = "Комиссия";
+        commissionNameLabel.Margin = new Padding(0, 0, 0, 12); commissionNameLabel.Text = "Комиссия";
         compositionGrid.AllowUserToAddRows = false; compositionGrid.AllowUserToDeleteRows = false; compositionGrid.AllowUserToResizeRows = false;
-        compositionGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; compositionGrid.Columns.AddRange(
-            new DataGridViewTextBoxColumn { HeaderText = "ФИО", Name = "fullNameColumn", FillWeight = 150 },
-            new DataGridViewTextBoxColumn { HeaderText = "Роль", Name = "roleColumn", FillWeight = 100 },
-            new DataGridViewTextBoxColumn { HeaderText = "Порядок", Name = "sortOrderColumn", FillWeight = 45 });
+        compositionGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; compositionGrid.ScrollBars = ScrollBars.Both; compositionGrid.Columns.AddRange(
+            new DataGridViewTextBoxColumn { HeaderText = "ФИО", Name = "fullNameColumn", FillWeight = 150F, MinimumWidth = 240 },
+            new DataGridViewTextBoxColumn { HeaderText = "Роль", Name = "roleColumn", FillWeight = 100F, MinimumWidth = 180 },
+            new DataGridViewTextBoxColumn { HeaderText = "Порядок", Name = "sortOrderColumn", FillWeight = 50F, MinimumWidth = 90 });
         compositionGrid.Dock = DockStyle.Fill; compositionGrid.MultiSelect = false; compositionGrid.ReadOnly = true;
         compositionGrid.RowHeadersVisible = false; compositionGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         compositionGrid.SelectionChanged += CompositionGrid_SelectionChanged;
@@ -56,21 +56,22 @@ partial class CommissionCompositionForm
         editorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 37F)); editorLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
         editorLayout.Controls.Add(memberLabel, 0, 0); editorLayout.Controls.Add(roleLabel, 1, 0); editorLayout.Controls.Add(sortOrderLabel, 2, 0);
         editorLayout.Controls.Add(memberComboBox, 0, 1); editorLayout.Controls.Add(roleComboBox, 1, 1); editorLayout.Controls.Add(sortOrderNumeric, 2, 1);
-        editorLayout.Dock = DockStyle.Fill; editorLayout.Margin = new Padding(0, 14, 0, 0); editorLayout.Padding = new Padding(12, 8, 12, 8);
-        editorLayout.RowCount = 2; editorLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); editorLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        editorLayout.AutoSize = true; editorLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink; editorLayout.Dock = DockStyle.Top; editorLayout.Margin = new Padding(0, 10, 0, 0); editorLayout.Padding = new Padding(10, 6, 10, 6);
+        editorLayout.RowCount = 2; editorLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); editorLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         ConfigureEditorLabel(memberLabel, "Член комиссии"); ConfigureEditorLabel(roleLabel, "Роль"); ConfigureEditorLabel(sortOrderLabel, "Порядок");
         ConfigureComboBox(memberComboBox); ConfigureComboBox(roleComboBox); sortOrderNumeric.Dock = DockStyle.Fill;
         sortOrderNumeric.Font = new Font("Segoe UI", 10F); sortOrderNumeric.Margin = new Padding(6, 2, 0, 0); sortOrderNumeric.Maximum = 100000;
-        actionsPanel.Controls.Add(addButton); actionsPanel.Controls.Add(updateButton); actionsPanel.Controls.Add(removeButton);
-        actionsPanel.Dock = DockStyle.Fill; actionsPanel.Margin = new Padding(0, 12, 0, 0); actionsPanel.WrapContents = false;
+        actionsPanel.AutoSize = true; actionsPanel.Controls.Add(addButton); actionsPanel.Controls.Add(updateButton); actionsPanel.Controls.Add(removeButton);
+        actionsPanel.Dock = DockStyle.Top; actionsPanel.Margin = new Padding(0, 8, 0, 0); actionsPanel.WrapContents = true;
         ConfigureActionButton(addButton, "Добавить", 125); addButton.Click += AddButton_Click;
         ConfigureActionButton(updateButton, "Изменить", 125); updateButton.Click += UpdateButton_Click;
         ConfigureActionButton(removeButton, "Удалить", 125); removeButton.Click += RemoveButton_Click;
         footerPanel.Controls.Add(closeButton); footerPanel.Dock = DockStyle.Fill; footerPanel.FlowDirection = FlowDirection.RightToLeft;
-        footerPanel.Margin = new Padding(0, 12, 0, 0); footerPanel.WrapContents = false; ConfigureActionButton(closeButton, "Закрыть", 130);
+        footerPanel.Margin = new Padding(0, 12, 0, 0); footerPanel.WrapContents = true; ConfigureActionButton(closeButton, "Закрыть", 130);
         closeButton.DialogResult = DialogResult.Cancel;
         AutoScaleDimensions = new SizeF(7F, 15F); AutoScaleMode = AutoScaleMode.Font; BackColor = AppColors.Background;
         CancelButton = closeButton; ClientSize = new Size(900, 600); Controls.Add(pageLayout); Font = new Font("Segoe UI", 9F);
+        MinimumSize = new Size(700, 500);
         MinimizeBox = false; Name = "CommissionCompositionForm"; StartPosition = FormStartPosition.CenterParent; Text = "Состав комиссии";
         pageLayout.ResumeLayout(false); pageLayout.PerformLayout(); ((System.ComponentModel.ISupportInitialize)compositionGrid).EndInit();
         editorLayout.ResumeLayout(false); editorLayout.PerformLayout(); ((System.ComponentModel.ISupportInitialize)sortOrderNumeric).EndInit();
@@ -91,7 +92,7 @@ partial class CommissionCompositionForm
 
     private static void ConfigureActionButton(Button button, string text, int width)
     {
-        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 0, 10, 0);
-        button.Size = new Size(width, 44); button.Text = text; button.UseVisualStyleBackColor = false;
+        button.Cursor = Cursors.Hand; button.FlatStyle = FlatStyle.Flat; button.Margin = new Padding(0, 0, 8, 6);
+        button.Size = new Size(width, 40); button.Padding = new Padding(10, 0, 10, 0); button.Text = text; button.UseVisualStyleBackColor = false;
     }
 }
